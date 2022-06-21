@@ -6,6 +6,9 @@ using UnityEngine.AI;
 public class KillerStateManager : MonoBehaviour
 {
     private KillerBaseState currentState;
+    private KillerBaseState DoTasks = new DoTasks();
+    private KillerBaseState Chase = new Chase();
+
     public NavMeshAgent agent;
 
     [SerializeField]
@@ -21,7 +24,7 @@ public class KillerStateManager : MonoBehaviour
 
     void Start()
     {
-        currentState = new Chase();
+        currentState = DoTasks;
 
         currentState.EnterState(this);
         agent.destination = tasks[0].position;
