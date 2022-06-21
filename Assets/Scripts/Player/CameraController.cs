@@ -15,21 +15,30 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        playerControls.Basic.Look.performed += Look;
     }
 
     private void OnDisable()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        playerControls.Basic.Look.performed -= Look;
     }
 
-    void Start()
+    void Awake()
     {
         playerControls = GameObject.Find("InputManager").GetComponent<InputManager>().playerControls;
-
         player = transform.parent;
+    }
 
-        playerControls.Basic.Look.performed += Look;
+    public void EnableCameraMovement(bool state)
+    {
+        if(state)
+            playerControls.Basic.Look.performed += Look;
+        else
+            playerControls.Basic.Look.performed -= Look;
     }
 
     private void Look(InputAction.CallbackContext context)

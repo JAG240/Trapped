@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isCrouched = false;
     private bool releaseCrouch = false;
     private Transform eyes;
+    private bool useGravity = true;
 
     private void Start()
     {
@@ -37,9 +38,20 @@ public class PlayerMovement : MonoBehaviour
         movementSpeed = walkSpeed;
     }
 
+    private void OnDisable()
+    {
+        useGravity = false;
+    }
+
+    private void OnEnable()
+    {
+        useGravity = true;
+    }
+
     private void Update()
     {
-        ApplyGravity();
+        if(useGravity)
+            ApplyGravity();
 
         if (playerControls.Basic.Walk.IsPressed())
             Walk(playerControls.Basic.Walk.ReadValue<Vector2>());

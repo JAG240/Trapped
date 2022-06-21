@@ -27,7 +27,7 @@ public class Interact : MonoBehaviour
 
             if (objInteract != null)
             {
-                objInteract.Interact();
+                objInteract.Interact(this.gameObject);
             }
         }
     }
@@ -57,4 +57,6 @@ public class Interact : MonoBehaviour
         objPeek = null;
         peekedObj = null;
     }
+
+
 }

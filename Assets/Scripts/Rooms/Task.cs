@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Task : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private float cooldownTimer = 30;
+    public bool onCooldown = false;
+
     void Start()
     {
-        
+        transform.root.GetComponent<Room>().AddTask(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CompleteTask()
     {
-        
+        onCooldown = true;
+        StartCoroutine(StartCooldown());
+    }
+
+    private IEnumerator StartCooldown()
+    {
+        yield return new WaitForSeconds(cooldownTimer);
+        onCooldown = false;
     }
 }

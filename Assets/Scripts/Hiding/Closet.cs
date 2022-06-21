@@ -4,29 +4,38 @@ using UnityEngine;
 
 public class Closet : MonoBehaviour, IInteractable, IPeekable
 {
-    GameObject[] doors = new GameObject[2];
+    private GameObject[] doors = new GameObject[2];
     private bool open = false;
-    [SerializeField] float peekAngle = 5f;
+    private Hiding hiding;
+    [SerializeField] private float peekAngle = 5f;
+    [SerializeField] private Vector3 characterOffset;
 
     private void Start()
     {
         doors[0] = transform.Find("Door_L").gameObject;
         doors[1] = transform.Find("Door_R").gameObject;
+        hiding = GetComponent<Hiding>();
     }
 
-    public void Interact()
+    public void Interact(GameObject player)
     {
         if(!open)
         {
             open = true;
-            doors[0].transform.RotateAround(doors[0].transform.position, Vector3.up, 90f);
-            doors[1].transform.RotateAround(doors[1].transform.position, Vector3.up, -90f);
+            player.GetComponentInChildren<CameraController>().EnableCameraMovement(false);
+            player.transform.position = transform.position + characterOffset;
+            player.GetComponent<PlayerMovement>().enabled = false;
+            player.transform.LookAt(transform.position + characterOffset + (-transform.right * 2) + (transform.up * 0.2f), Vector3.up);
+            hiding.IncreaseCounter();
             return;
         }
 
         open = false;
-        doors[0].transform.RotateAround(doors[0].transform.position, Vector3.up, -90f);
-        doors[1].transform.RotateAround(doors[1].transform.position, Vector3.up, 90f);
+        player.GetComponent<CharacterController>().enabled = false;
+        player.transform.position = transform.position + characterOffset + (-transform.right * 2);
+        player.GetComponent<PlayerMovement>().enabled = true;
+        player.GetComponent<CharacterController>().enabled = true;
+        player.GetComponentInChildren<CameraController>().EnableCameraMovement(true);
     }
 
     public void Peek(GameObject obj, bool state)
