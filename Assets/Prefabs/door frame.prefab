@@ -31,7 +31,10 @@ Transform:
   m_Father: {fileID: 325754101096536235}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 --- !u!1 &7173711017517864050
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,8 +80,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.25, y: 4.3, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 =======
 >>>>>>> 8e2e0b12c21d11e0b8e06251c74ca39e65aaf7d4
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &1186295080858314419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,6 +191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.x
+<<<<<<< Updated upstream
 <<<<<<< HEAD
       value: -8.107359
       objectReference: {fileID: 0}
@@ -197,15 +204,22 @@ PrefabInstance:
       value: -38.592106
 =======
       value: 6.522
+=======
+      value: -8.107359
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.61
+      value: 2.613951
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.z
+<<<<<<< Updated upstream
       value: -38.53
 >>>>>>> 8e2e0b12c21d11e0b8e06251c74ca39e65aaf7d4
+=======
+      value: -38.592106
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalRotation.w
@@ -237,11 +251,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5833444672279725916, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_Name
+<<<<<<< Updated upstream
 <<<<<<< HEAD
       value: door frame (3)
 =======
       value: door frame
 >>>>>>> 8e2e0b12c21d11e0b8e06251c74ca39e65aaf7d4
+=======
+      value: door frame (3)
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 5833444672279725916, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_Layer
@@ -277,7 +295,10 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.45492545, y: 3, z: 1.5004325}
   m_Center: {x: -0.00000011920933, y: -0.21935296, z: -0.000000536442}
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 --- !u!208 &8129400921651558517
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -294,8 +315,11 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.72, y: 0, z: -0.75}
   m_TimeToStationary: 0.5
+<<<<<<< Updated upstream
 =======
 >>>>>>> 8e2e0b12c21d11e0b8e06251c74ca39e65aaf7d4
+=======
+>>>>>>> Stashed changes
 --- !u!114 &1677989639
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable
 
     public void Interact(GameObject player)
     {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         if (!open)
             OpenDoor();
@@ -47,13 +48,36 @@ public class Door : MonoBehaviour, IInteractable, IPeekable
             open = true;
             RotateDoor(90f);
         }
+=======
+        if (!open)
+            OpenDoor();
+>>>>>>> Stashed changes
         else
-        {
-            open = false;
-            RotateDoor(-90f);
-        }
+            CloseDoor();
     }
+<<<<<<< Updated upstream
 >>>>>>> 8e2e0b12c21d11e0b8e06251c74ca39e65aaf7d4
+=======
+
+    public void OpenDoor()
+    {
+        if (open)
+            return;
+
+        open = true;
+        RotateDoor(90f);
+    }
+
+    public void CloseDoor()
+    {
+        if (!open)
+            return;
+
+        open = false;
+        RotateDoor(-90f);
+    }
+
+>>>>>>> Stashed changes
     public void Peek(GameObject obj, bool state)
     {
         if (state)
