@@ -5,35 +5,54 @@ using UnityEngine.AI;
 
 public class DoTasks : KillerBaseState
 {
-    bool doingTask;
-    Transform prevTask;
+    private bool taskAssigned;
+    private bool doingTask;
+    private Task prevTask;
+    private RoomManager roomManager;
 
     public override void EnterState(KillerStateManager Manager)
     {
+        taskAssigned = false;
         doingTask = false;
+
+        if (!roomManager)
+            roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
     }
 
     public override void UpdateState(KillerStateManager Manager)
     {
-        if (!Manager.agent.pathPending && !Manager.agent.hasPath)
-            doingTask = false;
-
-
-        if (!doingTask)
+        if (!taskAssigned)
         {
-            doingTask = true;
+            taskAssigned = true;
 
-            List<Transform> choices = new List<Transform>(Manager.tasks);
-            choices.Remove(prevTask);
+            Task newTask = roomManager.GetRandomTask();
 
-            Transform task = choices[Random.Range(0, choices.Count)];
-            prevTask = task;
-            Manager.agent.destination = task.position;
+            if (!newTask || newTask == prevTask)
+            {
+                taskAssigned = false;
+                return;
+            }
+
+            Manager.agent.destination = newTask.GetTaskPosition();
+            prevTask = newTask;
         }
+
+        if (!Manager.agent.pathPending && !Manager.agent.hasPath && !doingTask)
+            Manager.StartCoroutine(WaitForTask(prevTask.taskTime));
     }
 
     public override void ExitState(KillerStateManager Manager)
     {
-        throw new System.NotImplementedException();
-    }   
+        taskAssigned = false;
+        doingTask = false;
+    }
+
+    private IEnumerator WaitForTask(float timer)
+    {
+        doingTask = true;
+        yield return new WaitForSeconds(timer);
+        taskAssigned = false;
+        prevTask.CompleteTask();
+        doingTask = false;
+    }
 }

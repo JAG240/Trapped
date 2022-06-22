@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Task : MonoBehaviour
 {
-    [SerializeField] private float cooldownTimer = 30;
+    [SerializeField] private float cooldownTimer = 30f;
+    public float taskTime = 5f;
+    [SerializeField] private float taskPosOffset = 2f;
     public bool onCooldown = false;
 
     void Start()
@@ -22,5 +24,10 @@ public class Task : MonoBehaviour
     {
         yield return new WaitForSeconds(cooldownTimer);
         onCooldown = false;
+    }
+
+    public Vector3 GetTaskPosition()
+    {
+        return transform.position + (transform.forward * taskPosOffset);
     }
 }

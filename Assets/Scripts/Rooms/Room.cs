@@ -67,4 +67,20 @@ public class Room : MonoBehaviour
 
         return hidingList[0];
     }
+
+    public Task GetRandomTask()
+    {
+        List<Task> availableTasks = new List<Task>();
+
+        foreach(Task task in taskList)
+        {
+            if (task.onCooldown == false)
+                availableTasks.Add(task);
+        }
+
+        if (availableTasks.Count < 1)
+            return null;
+
+        return availableTasks[Random.Range(0, availableTasks.Count)];
+    }
 }

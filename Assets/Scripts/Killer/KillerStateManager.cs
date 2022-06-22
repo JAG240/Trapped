@@ -41,4 +41,20 @@ public class KillerStateManager : MonoBehaviour
         currentState = newState;
         currentState.ExitState(this);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.transform.tag == "Door")
+        {
+            other.transform.root.GetComponent<Door>().OpenDoor();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.tag == "Door")
+        {
+            other.transform.root.GetComponent<Door>().CloseDoor();
+        }
+    }
 }

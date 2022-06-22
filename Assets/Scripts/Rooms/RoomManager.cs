@@ -39,4 +39,14 @@ public class RoomManager : MonoBehaviour
 
         return roomList[0];
     }
+
+    public Room GetRandomRoom()
+    {
+        return roomList[Random.Range(0, roomList.Count)];
+    }
+
+    public Task GetRandomTask()
+    {
+        return GetRandomRoom().GetRandomTask();
+    }
 }
