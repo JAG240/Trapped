@@ -2,24 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable, IPeekable
+public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 {
-    [SerializeField] private bool open = false;
+    public bool open { get; private set; }
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private float peekAngle = 5f;
     private GameObject door;
+    [SerializeField] private bool isSus = false;
 
     private void Start()
     {
         door = transform.Find("door").gameObject;
+        open = false;
+
+        Collider[] rooms = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Room"));
+        foreach(Collider room in rooms)
+        {
+            room.GetComponent<Room>().AddDoor(this);
+        }
     }
 
     public void Interact(GameObject player)
     {
         if (!open)
+        {
+            isSus = true;
             OpenDoor();
+        }
         else
+        {
+            isSus = false;
             CloseDoor();
+        }
     }
 
     public void OpenDoor()
@@ -55,4 +69,14 @@ public class Door : MonoBehaviour, IInteractable, IPeekable
         door.transform.localRotation = rot * door.transform.localRotation;
     }
 
+    public bool StateChanged()
+    {
+        if(isSus)
+        {
+            isSus = false;
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 471937500425942428}
   - component: {fileID: 2258329816273261280}
   - component: {fileID: 7861290538837030871}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,9 +112,9 @@ GameObject:
   - component: {fileID: 3959813870143219545}
   - component: {fileID: 1623472164899671668}
   - component: {fileID: 7861290538837030877}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -219,6 +219,8 @@ MonoBehaviour:
   runSpeed: 10
   crouchSpeed: 3
   jumpHeight: 4
+  walkCollisionPower: 0
+  runCollisionPower: 0
 --- !u!1 &7861290538961214116
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +232,7 @@ GameObject:
   - component: {fileID: 7861290538961214113}
   - component: {fileID: 7861290538961214118}
   - component: {fileID: 7861290538961214119}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

@@ -19,10 +19,11 @@ public class Interact : MonoBehaviour
 
     private void Activate()
     {
-        RaycastHit obj;
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, LayerMask.GetMask("Interactable"));
 
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out obj, 3, LayerMask.GetMask("Interactable")))
+        if (hits.Length > 0)
         {
+            GameObject obj = hits[0].transform.parent.gameObject;
             IInteractable objInteract = obj.transform.GetComponent<IInteractable>();
 
             if (objInteract != null)

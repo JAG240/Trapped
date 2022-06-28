@@ -21,24 +21,43 @@ public class DoTasks : KillerBaseState
 
     public override void UpdateState(KillerStateManager Manager)
     {
-        if (!taskAssigned)
+        if (!Manager.agent.pathPending && !Manager.agent.hasPath && !doingTask && taskAssigned)
+            Manager.StartCoroutine(WaitForTask(prevTask.taskTime));
+
+        if (taskAssigned)
+            return;
+
+        taskAssigned = true;
+        Task newTask = null;
+
+        switch (Manager.suspicion)
         {
-            taskAssigned = true;
-
-            Task newTask = roomManager.GetRandomTask();
-
-            if (!newTask || newTask == prevTask)
-            {
-                taskAssigned = false;
-                return;
-            }
-
-            Manager.agent.destination = newTask.GetTaskPosition();
-            prevTask = newTask;
+            case float s when s <= 30:
+                newTask = roomManager.GetTaskCloseToRoom(roomManager.GetMostVisitedRoom());
+                break;
+            case float s when s <= 50:
+                newTask = roomManager.GetTaskCloseToRoom(roomManager.playerCurrentRoom);
+                break;
+            case float s when s <= 100:
+                newTask = roomManager.GetTaskInRoom(roomManager.playerCurrentRoom);
+                break;
+            default:
+                newTask = roomManager.GetRandomTask();
+                break;
         }
 
-        if (!Manager.agent.pathPending && !Manager.agent.hasPath && !doingTask)
-            Manager.StartCoroutine(WaitForTask(prevTask.taskTime));
+        if (!newTask)
+            newTask = roomManager.GetRandomTask();
+
+        if (!newTask || newTask == prevTask)
+        {
+            taskAssigned = false;
+            return;
+        }
+
+        Manager.agent.destination = newTask.GetTaskPosition();
+        prevTask = newTask;
+
     }
 
     public override void ExitState(KillerStateManager Manager)

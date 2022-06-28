@@ -7,6 +7,7 @@ public class Room : MonoBehaviour
     private RoomManager roomManager;
     private List<Task> taskList = new List<Task>();
     private List<Hiding> hidingList = new List<Hiding>();
+    public List<Door> doorList = new List<Door>();
     public int visitCount { get; private set; }
 
     void Start()
@@ -14,6 +15,15 @@ public class Room : MonoBehaviour
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         roomManager.AddRoom(this);
         visitCount = 0;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            visitCount++;
+            roomManager.UpdatePlayerCurrentRoom(this);
+        }
     }
 
     public void AddTask(Task task)
@@ -42,16 +52,21 @@ public class Room : MonoBehaviour
         hidingList.Remove(hiding);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void AddDoor(Door door)
     {
-        if (other.tag == "Player")
-            visitCount++;
+        if (!doorList.Contains(door))
+            doorList.Add(door);
+        else
+            Debug.LogError($"{door} already added to door list");
+    }
+
+    public void RemoveDoor(Door door)
+    {
+        doorList.Remove(door);
     }
 
     public Task GetTask()
     {
-        Task bestTask = taskList[0];
-
         foreach(Task task in taskList)
         {
             if (task.onCooldown == false)

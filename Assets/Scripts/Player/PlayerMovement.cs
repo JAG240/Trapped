@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
     [SerializeField] private float jumpHeight;
+    [SerializeField] private float walkCollisionPower;
+    [SerializeField] private float runCollisionPower;
+    private float collisionPower;
     private float movementSpeed;
     private PlayerControls playerControls;
     private CharacterController characterController;
@@ -26,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
         characterVelocity = characterController.velocity;
         gravity = Physics.gravity.y;
         eyes = transform.Find("Eyes");
+        collisionPower = walkCollisionPower;
 
         playerControls.Basic.Run.performed += (context) => Run(true);
         playerControls.Basic.Run.canceled += (context) => Run(false);
@@ -76,9 +80,15 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (state)
+        {
             movementSpeed = runSpeed;
+            collisionPower = runCollisionPower;
+        }
         else
+        {
             movementSpeed = walkSpeed;
+            collisionPower = walkCollisionPower;
+        }
     }
 
     private void Walk(Vector2 input)
@@ -117,5 +127,17 @@ public class PlayerMovement : MonoBehaviour
         characterController.center = Vector3.zero;
         movementSpeed = walkSpeed;
         eyes.localPosition = new Vector3(0f, 1f, 0.45f);
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        if (!body || body.isKinematic)
+            return;
+
+        Vector3 pushDir = hit.transform.position - transform.position;
+        pushDir.y = 0.2f;
+        body.AddForce(pushDir * collisionPower, ForceMode.Impulse);
     }
 }

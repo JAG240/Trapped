@@ -10,12 +10,9 @@ public class KillerStateManager : MonoBehaviour
     private KillerBaseState Chase = new Chase();
 
     public NavMeshAgent agent;
-
-    [SerializeField]
     public Transform player;
 
-    [SerializeField]
-    public List<Transform> tasks = new List<Transform>();
+    [field: SerializeField, Range(0, 100)] public float suspicion { get; private set; }
 
     private void Awake()
     {
@@ -24,10 +21,10 @@ public class KillerStateManager : MonoBehaviour
 
     void Start()
     {
-        currentState = DoTasks;
+        suspicion = 0f;
 
+        currentState = DoTasks;
         currentState.EnterState(this);
-        agent.destination = tasks[0].position;
     }
 
     void Update()

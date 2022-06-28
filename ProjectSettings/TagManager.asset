@@ -5,18 +5,20 @@ TagManager:
   serializedVersion: 2
   tags:
   - Door
+  - Killer
+  - Bottle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Interactable
   - Peekable
-  - 
-  - 
-  - 
+  - Room
+  - Door
+  - Bottle
   - 
   - 
   - 
