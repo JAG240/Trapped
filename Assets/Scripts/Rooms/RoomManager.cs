@@ -10,6 +10,7 @@ public class RoomManager : MonoBehaviour
 
     private List<Room> roomList = new List<Room>();
     public Room playerCurrentRoom { get; private set; }
+    public Room killerCurrentRoom { get; private set; }
 
     private void Awake()
     {
@@ -37,6 +38,61 @@ public class RoomManager : MonoBehaviour
     public void UpdatePlayerCurrentRoom(Room room)
     {
         playerCurrentRoom = room;
+    }
+
+    public void UpdateKillerCurrentRoom(Room room)
+    {
+        killerCurrentRoom = room;
+    }
+
+    public bool KillerInRoomAudio(GameObject audioSource)
+    {
+        Room audioRoom = GetRoom(audioSource.transform);
+
+        if(!audioRoom)
+        {
+            Debug.Log($"Audio room cannot be found for {audioSource.name}");
+            return false;
+        }
+
+        if(killerCurrentRoom == audioRoom)
+        {
+            Debug.Log("Killer heard you!");
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool KillerInConnectedRoomAudio(GameObject audioSource)
+    {
+        Room audioRoom = GetRoom(audioSource.transform);
+
+        if (!audioRoom)
+        {
+            Debug.Log($"Audio room cannot be found for {audioSource.name}");
+            return false;
+        }
+
+        foreach (Door door in audioRoom.doorList)
+        {
+            foreach(Room room in door.roomList)
+            {
+                if (audioRoom != room && killerCurrentRoom == room)
+                {
+                    Debug.Log($"Killer Heard you!");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public Room GetRoom(Transform pos)
+    {
+        Collider[] hits = Physics.OverlapSphere(pos.position, 0.2f, LayerMask.GetMask("Room"));
+        return hits.Count() > 0 ? hits[0].GetComponent<Room>() : null;
     }
 
     public Room GetMostVisitedRoom()
@@ -75,16 +131,12 @@ public class RoomManager : MonoBehaviour
 
         foreach(Door door in room.doorList)
         {
-            foreach(Room curRoom in roomList)
-            {
-                if (curRoom == room)
-                    continue;
+            List<Room> doorRooms = door.roomList;
 
-                if(curRoom.doorList.Contains(door))
-                {
-                    rooms.Add(curRoom);
-                    break;
-                }
+            foreach(Room doorRoom in doorRooms)
+            {
+                if (room != doorRoom)
+                    rooms.Add(doorRoom);
             }
         }
 

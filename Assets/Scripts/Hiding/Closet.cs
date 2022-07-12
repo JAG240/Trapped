@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Closet : MonoBehaviour, IInteractable, IPeekable
+public class Closet : Hiding, IInteractable, IPeekable
 {
     private GameObject[] doors = new GameObject[2];
     private bool open = false;
@@ -12,6 +12,7 @@ public class Closet : MonoBehaviour, IInteractable, IPeekable
 
     private void Start()
     {
+        AddToRoom();
         doors[0] = transform.Find("Door_L").gameObject;
         doors[1] = transform.Find("Door_R").gameObject;
         hiding = GetComponent<Hiding>();
@@ -47,5 +48,10 @@ public class Closet : MonoBehaviour, IInteractable, IPeekable
             door.transform.RotateAround(door.transform.position, Vector3.up, peekAngle * doorNormalize);
         else
             door.transform.RotateAround(door.transform.position, Vector3.up, -peekAngle * doorNormalize);
+    }
+
+    public override Vector3 GetPosition()
+    {
+        return transform.position + (-transform.right * 2);
     }
 }

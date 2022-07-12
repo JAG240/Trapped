@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 {
-    public bool open { get; private set; }
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private float peekAngle = 5f;
-    private GameObject door;
     [SerializeField] private bool isSus = false;
+    public bool open { get; private set; } = false;
+    private GameObject door;
+    public List<Room> roomList { get; private set; } = new List<Room>();
 
     private void Start()
     {
         door = transform.Find("door").gameObject;
-        open = false;
 
         Collider[] rooms = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Room"));
         foreach(Collider room in rooms)
         {
-            room.GetComponent<Room>().AddDoor(this);
+            Room roomScript = room.GetComponent<Room>();
+            roomList.Add(roomScript);
+            roomScript.AddRoomItem<Door>(this);
         }
     }
 

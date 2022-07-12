@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Detection : MonoBehaviour
 {
@@ -9,11 +10,16 @@ public class Detection : MonoBehaviour
     [SerializeField] int memorySize = 10;
     [SerializeField] float detectionAngle = 90;
     [SerializeField] LayerMask detectionMasks;
+    [SerializeField] LayerMask raycastLayerMask;
     [SerializeField] Transform eyes;
+    public event Action<GameObject> detectedObject;
+    [SerializeField] private bool playerInSight = false;
+    [SerializeField] private LayerMask checkMask;
 
     private void Start()
     {
         StartCoroutine(CheckVision());
+        checkMask = detectionMasks;
     }
 
     //Debug Method to see detection sphere
@@ -32,7 +38,7 @@ public class Detection : MonoBehaviour
 
         while(true)
         {
-            if(Physics.OverlapSphereNonAlloc(transform.position, radius, results, detectionMasks) >  0)
+            if(Physics.OverlapSphereNonAlloc(transform.position, radius, results, checkMask) >  0)
             {
                 foreach (Collider obj in results)
                 {
@@ -43,14 +49,33 @@ public class Detection : MonoBehaviour
                     angle = Mathf.Abs(Vector3.Angle(transform.forward, direction));
 
                     if (angle > detectionAngle || angle < -detectionAngle)
+                    {
+                        if (playerInSight && obj.name ==  "Player")
+                            SetPlayerInSight(null);
+
                         continue;
+                    }
 
-                        //Debug.DrawRay(obj.transform.position, -direction, Color.yellow, 5f);
+                    //Debug.DrawRay(obj.transform.position, -direction, Color.yellow, 5f);
 
-                    if (Physics.Raycast(obj.transform.position, -direction, out hit, radius))
+                    if (Physics.Raycast(obj.transform.position, -direction, out hit, radius, raycastLayerMask))
                     {
                         if (hit.transform.tag != "Killer")
+                        {
+                            if(obj.name == "Player" && playerInSight)
+                                SetPlayerInSight(null);
+
                             continue;
+                        }
+
+                        if(obj.name == "Player")
+                        {
+                            if (playerInSight)
+                                continue;
+
+                            SetPlayerInSight(obj.gameObject);
+                            continue;
+                        }
 
                         IStateComparable objState;
 
@@ -60,12 +85,28 @@ public class Detection : MonoBehaviour
                             objState = obj.transform.GetComponent<IStateComparable>();
 
                         if (objState != null && objState.StateChanged())
-                            Debug.Log($"{obj.name} has changed state");
+                            detectedObject.Invoke(obj.gameObject);
                     }
                 }
             }
 
             yield return new WaitForSeconds(detectionTimer);
+        }
+    }
+
+    private void SetPlayerInSight(GameObject obj)
+    {
+        if(obj)
+        {
+            playerInSight = true;
+            detectedObject.Invoke(obj);
+            checkMask = LayerMask.GetMask("Player");
+        }
+        else
+        {
+            playerInSight = false;
+            detectedObject.Invoke(null);
+            checkMask = detectionMasks;
         }
     }
 }

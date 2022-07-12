@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1720105177418402399}
   - component: {fileID: 1754608214628596505}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: enemy_check
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -169,7 +169,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4134158824072292266, guid: 39e21023b0141d34da9b89330d1015e3, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 39e21023b0141d34da9b89330d1015e3, type: 3}
 --- !u!1 &3290587336768450852 stripped
 GameObject:
@@ -214,15 +215,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.107359
+      value: 6.522
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.613951
+      value: 2.61
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -38.592106
+      value: -38.53
       objectReference: {fileID: 0}
     - target: {fileID: 1509795174628557528, guid: ffbde7dd1e0121243844146ca0eaae60, type: 3}
       propertyPath: m_LocalRotation.w
@@ -286,7 +287,7 @@ BoxCollider:
   m_GameObject: {fileID: 4648310830348705071}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.45492545, y: 3, z: 1.5004325}
   m_Center: {x: -0.00000011920933, y: -0.21935296, z: -0.000000536442}
@@ -318,6 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0f3f23e8d9964fa2a8fcdb41e292c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  open: 0
   pivotPoint: {fileID: 131849654}
   peekAngle: 10
+  isSus: 0

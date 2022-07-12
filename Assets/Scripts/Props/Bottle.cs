@@ -6,7 +6,13 @@ public class Bottle : MonoBehaviour, IStateComparable
 {
     [SerializeField] private GameObject ghostPrefab;
     [SerializeField] private float susDistance = 1f;
+    [SerializeField] private AudioClip smallDrop;
+    [SerializeField] private AudioClip bigDrop;
+    [SerializeField] private float audioForce = 2f;
+    [SerializeField] private float audioForceBig = 4f;
     private GhostBottle ghost;
+    private AudioSource audioSource;
+    private RoomManager roomManager;
 
     private void Start()
     {
@@ -14,6 +20,9 @@ public class Bottle : MonoBehaviour, IStateComparable
         ghost = objGhost.GetComponent<GhostBottle>();
         ghost.SetParent(this);
         ghost.gameObject.SetActive(false);
+
+        audioSource = GetComponent<AudioSource>();
+        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
     }
 
     public bool StateChanged()
@@ -50,5 +59,25 @@ public class Bottle : MonoBehaviour, IStateComparable
         ghost.gameObject.SetActive(true);
         ghost.transform.position = transform.position;
         ghost.transform.rotation = transform.rotation;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (audioSource.isPlaying)
+            return;
+
+        if(collision.relativeVelocity.magnitude > audioForceBig)
+        {
+            audioSource.clip = bigDrop;
+            audioSource.Play();
+            roomManager.KillerInRoomAudio(gameObject);
+            roomManager.KillerInConnectedRoomAudio(gameObject);
+        }
+        else if(collision.relativeVelocity.magnitude > audioForce)
+        {
+            audioSource.clip = smallDrop;
+            audioSource.Play();
+            roomManager.KillerInRoomAudio(gameObject);
+        }
     }
 }

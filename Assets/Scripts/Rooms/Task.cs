@@ -6,12 +6,12 @@ public class Task : MonoBehaviour
 {
     [SerializeField] private float cooldownTimer = 30f;
     public float taskTime = 5f;
-    [SerializeField] private float taskPosOffset = 2f;
+    [SerializeField] protected float taskPosOffset = 2f;
     public bool onCooldown = false;
 
-    void Start()
+    protected virtual void Start()
     {
-        transform.root.GetComponent<Room>().AddTask(this);
+        transform.root.GetComponent<Room>().AddRoomItem<Task>(this);
     }
 
     public void CompleteTask()
@@ -26,8 +26,25 @@ public class Task : MonoBehaviour
         onCooldown = false;
     }
 
+    public void CancelTask()
+    {
+        StopAllCoroutines();
+        onCooldown = false;
+    }
+
     public Vector3 GetTaskPosition()
     {
         return transform.position + (transform.forward * taskPosOffset);
     }
+
+#if UNITY_EDITOR
+    public bool showTaskPosition;
+
+    private void OnDrawGizmos()
+    { 
+        if(showTaskPosition)
+            Gizmos.DrawSphere(GetTaskPosition(), 0.2f);
+    }
+
+#endif
 }

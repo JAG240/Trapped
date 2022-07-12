@@ -23,46 +23,42 @@ public class Room : MonoBehaviour
         {
             visitCount++;
             roomManager.UpdatePlayerCurrentRoom(this);
+            return;
         }
+
+        if (other.transform.tag == "Killer")
+            roomManager.UpdateKillerCurrentRoom(this);
     }
 
-    public void AddTask(Task task)
+    public void AddRoomItem<T>(T item)
     {
-        if (!taskList.Contains(task))
-            taskList.Add(task);
+        if(item as Task)
+        {
+            Task task = item as Task;
+
+            if (!taskList.Contains(task))
+                taskList.Add(task);
+            else
+                Debug.LogError($"{task.name} already added to task list");
+        }
+        else if(item as Hiding)
+        {
+            Hiding hiding = item as Hiding;
+
+            if (!hidingList.Contains(hiding))
+                hidingList.Add(hiding);
+            else
+                Debug.LogError($"{hiding.name} already added to hiding list");
+        }
         else
-            Debug.LogError($"{task.name} already added to task list");
-    }
+        {
+            Door door = item as Door;
 
-    public void RemoveTask(Task task)
-    {
-        taskList.Remove(task);
-    }
-
-    public void AddHiding(Hiding hiding)
-    {
-        if (!hidingList.Contains(hiding))
-            hidingList.Add(hiding);
-        else
-            Debug.LogError($"{hiding.name} already added to hiding list");
-    }
-
-    public void RemoveHiding(Hiding hiding)
-    {
-        hidingList.Remove(hiding);
-    }
-
-    public void AddDoor(Door door)
-    {
-        if (!doorList.Contains(door))
-            doorList.Add(door);
-        else
-            Debug.LogError($"{door} already added to door list");
-    }
-
-    public void RemoveDoor(Door door)
-    {
-        doorList.Remove(door);
+            if (!doorList.Contains(door))
+                doorList.Add(door);
+            else
+                Debug.LogError($"{door} already added to door list");
+        }
     }
 
     public Task GetTask()
@@ -97,5 +93,10 @@ public class Room : MonoBehaviour
             return null;
 
         return availableTasks[Random.Range(0, availableTasks.Count)];
+    }
+
+    public Hiding GetRandomHiding()
+    {
+        return hidingList[Random.Range(0, hidingList.Count)];
     }
 }

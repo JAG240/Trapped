@@ -28,7 +28,7 @@ public class Interact : MonoBehaviour
 
             if (objInteract != null)
             {
-                objInteract.Interact(this.gameObject);
+                objInteract.Interact(gameObject);
             }
         }
     }
