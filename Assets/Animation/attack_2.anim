@@ -33733,7 +33733,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.33333334
-    functionName: PlaySound
+    functionName: PlayVoiceClip
     data: 
     objectReferenceParameter: {fileID: 8300000, guid: b51b3b97e5caa8c4a8e46992781f91a6, type: 3}
     floatParameter: 0

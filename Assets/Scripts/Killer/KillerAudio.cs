@@ -11,12 +11,12 @@ public class KillerAudio : MonoBehaviour
     [SerializeField] private AudioClip effortGrunt;
     [SerializeField] private AudioClip fullChop;
     private Transform player;
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource killerVoice;
     private AudioLowPassFilter lowPassFilter;
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         lowPassFilter = GetComponent<AudioLowPassFilter>();
         player = GameObject.Find("Player").transform;
     }
@@ -57,5 +57,13 @@ public class KillerAudio : MonoBehaviour
         audioSource.pitch = 1f;
         audioSource.clip = clip;
         audioSource.Play();
+    }
+    
+    public void PlayVoiceClip(AudioClip clip)
+    {
+        UpdateLowPassFilter();
+        killerVoice.pitch = 1f;
+        killerVoice.clip = clip;
+        killerVoice.Play();
     }
 }

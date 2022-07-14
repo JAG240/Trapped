@@ -26,7 +26,7 @@ public class Closet : Hiding, IInteractable, IPeekable
             player.GetComponentInChildren<CameraController>().EnableCameraMovement(false);
             player.transform.position = transform.position + characterOffset;
             player.GetComponent<PlayerMovement>().enabled = false;
-            player.transform.LookAt(transform.position + characterOffset + (-transform.right * 2) + (transform.up * 0.2f), Vector3.up);
+            player.transform.LookAt(GetPosition() + characterOffset + (transform.up * 0.2f), Vector3.up);
             hiding.IncreaseCounter();
             return;
         }

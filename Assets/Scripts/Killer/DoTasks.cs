@@ -64,6 +64,9 @@ public class DoTasks : KillerBaseState
         if (doingTask)
             prevTask.CancelTask();
 
+        Manager.StopAllCoroutines();
+        Manager.killerAnimator.SetChop(false);
+
         taskAssigned = false;
         doingTask = false;
     }

@@ -7,6 +7,10 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private float peekAngle = 5f;
     [SerializeField] private bool isSus = false;
+    [SerializeField] private AudioClip openDoor;
+    [SerializeField] private AudioClip closeDoor;
+    private AudioSource audioSource;
+
     public bool open { get; private set; } = false;
     private GameObject door;
     public List<Room> roomList { get; private set; } = new List<Room>();
@@ -14,6 +18,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     private void Start()
     {
         door = transform.Find("door").gameObject;
+        audioSource = GetComponent<AudioSource>();
 
         Collider[] rooms = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Room"));
         foreach(Collider room in rooms)
@@ -43,6 +48,8 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         if (open)
             return;
 
+        audioSource.clip = openDoor;
+        audioSource.Play();
         open = true;
         RotateDoor(90f);
     }
@@ -52,6 +59,8 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         if (!open)
             return;
 
+        audioSource.clip = closeDoor;
+        audioSource.Play();
         open = false;
         RotateDoor(-90f);
     }

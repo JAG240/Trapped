@@ -8,6 +8,6 @@ public class KillerParticles : MonoBehaviour
 
     public void ChopParticle()
     {
-        bloodSplat.Play();
+        bloodSplat.Emit(60);
     }
 }
