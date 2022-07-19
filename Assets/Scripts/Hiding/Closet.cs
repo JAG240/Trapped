@@ -9,10 +9,13 @@ public class Closet : Hiding, IInteractable, IPeekable
     private Hiding hiding;
     [SerializeField] private float peekAngle = 5f;
     [SerializeField] private Vector3 characterOffset;
+    [SerializeField] private bool Register = true;
 
     private void Start()
     {
-        AddToRoom();
+        if(Register)
+            AddToRoom();
+
         doors[0] = transform.Find("Door_L").gameObject;
         doors[1] = transform.Find("Door_R").gameObject;
         hiding = GetComponent<Hiding>();

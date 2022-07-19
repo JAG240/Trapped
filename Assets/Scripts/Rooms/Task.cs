@@ -8,10 +8,12 @@ public class Task : MonoBehaviour
     public float taskTime = 5f;
     [SerializeField] protected float taskPosOffset = 2f;
     public bool onCooldown = false;
+    [SerializeField] private bool RegisterTask = true;
 
     protected virtual void Start()
     {
-        transform.root.GetComponent<Room>().AddRoomItem<Task>(this);
+        if(RegisterTask)
+            transform.root.GetComponent<Room>().AddRoomItem<Task>(this);
     }
 
     public void CompleteTask()

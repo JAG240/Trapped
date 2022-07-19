@@ -10,11 +10,15 @@ public class Car : MonoBehaviour
     private CharacterController characterController;
     private AudioSource audioSource;
     private AudioLowPassFilter audioLowPassFilter;
+    private ParticleSystem smoke;
+    private Transform rpmNeedle;
+    private Transform speedNeedle;
     [SerializeField] private bool startIntro = false;
     [SerializeField] private Vector3 seatPosOffset;
     [SerializeField] private Vector3 lookPosOffset;
     [SerializeField] private Vector3 exitOffSet;
     [SerializeField] private AudioClip stallNoise;
+    [SerializeField] private float needleSpeed;
 
     void Start()
     {
@@ -24,6 +28,9 @@ public class Car : MonoBehaviour
         characterController = player.GetComponent<CharacterController>();
         audioSource = GetComponent<AudioSource>();
         audioLowPassFilter = GetComponent<AudioLowPassFilter>();
+        smoke = GetComponentInChildren<ParticleSystem>();
+        rpmNeedle = transform.Find("Needle_RPM");
+        speedNeedle = transform.Find("Needle_Speedometer");
 
         if(startIntro)
             EnterCar();
@@ -50,6 +57,9 @@ public class Car : MonoBehaviour
 
     public void Stall()
     {
+        smoke.Play();
+        StartCoroutine(DropNeedle(rpmNeedle));
+        StartCoroutine(DropNeedle(speedNeedle));
         audioSource.Stop();
         audioLowPassFilter.cutoffFrequency = 2000f;
         audioSource.loop = false;
@@ -70,6 +80,23 @@ public class Car : MonoBehaviour
     private Vector3 GetExitPosition()
     {
         return transform.position + exitOffSet;
+    }
+
+    private IEnumerator DropNeedle(Transform needle)
+    {
+        float totalTime = 0f;
+        float startRotation = needle.localRotation.eulerAngles.z;
+
+        while(totalTime < needleSpeed)
+        {
+            float t = totalTime / needleSpeed;
+            float newZ = Mathf.Lerp(startRotation, 360f, t);
+            needle.localRotation = Quaternion.Euler(0f, 0f, newZ);
+            totalTime += Time.deltaTime;
+            yield return null;
+        }
+
+        needle.localRotation = Quaternion.identity;
     }
 
 #if UNITY_EDITOR
