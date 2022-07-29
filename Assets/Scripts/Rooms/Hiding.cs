@@ -11,7 +11,7 @@ public abstract class Hiding : MonoBehaviour
 
     protected void AddToRoom()
     {
-        transform.root.GetComponent<Room>().AddRoomItem<Hiding>(this);
+        transform.parent.GetComponentInChildren<Room>().AddRoomItem<Hiding>(this);
     }
 
     public virtual Vector3 GetPosition()

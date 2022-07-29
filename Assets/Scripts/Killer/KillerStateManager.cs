@@ -53,7 +53,7 @@ public class KillerStateManager : MonoBehaviour
     {
         if(other.transform.tag == "Door")
         {
-            other.transform.root.GetComponent<Door>().OpenDoor();
+            other.transform.parent.GetComponent<Door>().OpenDoor();
         }
     }
 
@@ -61,7 +61,7 @@ public class KillerStateManager : MonoBehaviour
     {
         if (other.transform.tag == "Door")
         {
-            other.transform.root.GetComponent<Door>().CloseDoor();
+            other.transform.parent.GetComponent<Door>().CloseDoor();
         }
     }
 

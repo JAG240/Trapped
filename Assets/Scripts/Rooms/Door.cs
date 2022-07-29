@@ -9,7 +9,10 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     [SerializeField] private bool isSus = false;
     [SerializeField] private AudioClip openDoor;
     [SerializeField] private AudioClip closeDoor;
+    [SerializeField] private bool activeDoor = true;
+    [SerializeField] private bool registerDoor = true;
     private AudioSource audioSource;
+    private List<Lock> locks;
 
     public bool open { get; private set; } = false;
     private GameObject door;
@@ -19,8 +22,12 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     {
         door = transform.Find("door").gameObject;
         audioSource = GetComponent<AudioSource>();
+        locks = new List<Lock>(gameObject.GetComponentsInChildren<Lock>());
 
-        Collider[] rooms = Physics.OverlapSphere(transform.position, 3, LayerMask.GetMask("Room"));
+        if (!registerDoor)
+            return;
+
+        Collider[] rooms = Physics.OverlapSphere(transform.position, 1, LayerMask.GetMask("Room"));
         foreach(Collider room in rooms)
         {
             Room roomScript = room.GetComponent<Room>();
@@ -31,6 +38,12 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 
     public void Interact(GameObject player)
     {
+        if (!CheckLocks(player.GetComponent<PlayerInventory>()))
+        {
+            //tell the player they do not have the correct key
+            return;
+        }
+
         if (!open)
         {
             isSus = true;
@@ -45,7 +58,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 
     public void OpenDoor()
     {
-        if (open)
+        if (open || !activeDoor)
             return;
 
         audioSource.clip = openDoor;
@@ -56,7 +69,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 
     public void CloseDoor()
     {
-        if (!open)
+        if (!open || !activeDoor)
             return;
 
         audioSource.clip = closeDoor;
@@ -86,6 +99,23 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         {
             isSus = false;
             return true;
+        }
+
+        return false;
+    }
+
+    private bool CheckLocks(PlayerInventory playerInventory)
+    {
+        if (locks.Count <= 0)
+            return true;
+
+        for(int i = 0; i < locks.Count; i++)
+        {
+            if (locks[i].Unlock(playerInventory))
+            {
+                locks.RemoveAt(i);
+                break;
+            }
         }
 
         return false;

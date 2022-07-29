@@ -13,7 +13,7 @@ public class Task : MonoBehaviour
     protected virtual void Start()
     {
         if(RegisterTask)
-            transform.root.GetComponent<Room>().AddRoomItem<Task>(this);
+            transform.parent.GetComponentInChildren<Room>().AddRoomItem<Task>(this);
     }
 
     public void CompleteTask()

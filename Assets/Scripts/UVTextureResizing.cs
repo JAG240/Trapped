@@ -13,7 +13,6 @@ public class UVTextureResizing : MonoBehaviour
         GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleFactor, transform.localScale.z / scaleFactor);
     }
 
-    // Update is called once per frame
     void Update()
     {
 
