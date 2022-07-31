@@ -65,6 +65,14 @@ public class KillerStateManager : MonoBehaviour
         }
     }
 
+    public void lookAt(Vector3 target)
+    {
+        Vector3 lookDir = target - transform.position;
+        lookDir.y = 0;
+        Quaternion end = Quaternion.LookRotation(lookDir);
+        transform.rotation = end;
+    }
+
     private void seenObject(GameObject obj)
     {
         if (!obj)

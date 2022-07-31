@@ -6,17 +6,28 @@ using Unity.Collections;
 public class StreetBuilder : MonoBehaviour
 {
     [SerializeField] private GameObject streetSegment;
-    [SerializeField] private GameObject staticStreetSegement;
     [field: SerializeField] public float streetStart { get; private set; } = 0f;
     [field: SerializeField] public float streetEnd { get; private set; } = 0f;
     [field: SerializeField] public Vector3 speed { get; private set; } = new Vector3(-0.3f, 0f, 0f);
     [SerializeField] private Transform mostRecent;
     [SerializeField] private float stopTimer = 3.0f;
+    private int segements;
+    private int resets = 0;
+
+    private void Start()
+    {
+        segements = GameObject.FindGameObjectsWithTag("Street").Length;
+    }
 
     public Vector3 GetResetPos(Transform currentSegement)
     {
-        float x = mostRecent.position.x + (currentSegement.transform.localScale.x * 2) + (speed.x * Time.deltaTime);
+        float x = mostRecent.position.x + (currentSegement.transform.localScale.x * 2);
+
+        if (resets%segements == 0)
+            x += (speed.x * Time.deltaTime);
+
         mostRecent = currentSegement;
+        resets++;
         return new Vector3(x, transform.position.y, transform.position.z);
     }
 

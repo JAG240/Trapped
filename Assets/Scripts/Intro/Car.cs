@@ -7,6 +7,7 @@ public class Car : MonoBehaviour
     private GameObject player;
     private PlayerMovement playerMovement;
     private CameraController cameraController;
+    private PlayerAudio playerAudio;
     private CharacterController characterController;
     private AudioSource audioSource;
     private AudioLowPassFilter audioLowPassFilter;
@@ -18,25 +19,31 @@ public class Car : MonoBehaviour
     [SerializeField] private Vector3 lookPosOffset;
     [SerializeField] private Vector3 exitOffSet;
     [SerializeField] private AudioClip stallNoise;
-    [SerializeField] private float needleSpeed;
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip doorClose;
+    [field: SerializeField] public float needleSpeed { get; private set; }
 
-    void Start()
+    private void Awake()
     {
         player = GameObject.Find("Player");
         playerMovement = player.GetComponent<PlayerMovement>();
         cameraController = player.GetComponentInChildren<CameraController>();
+        playerAudio = player.GetComponent<PlayerAudio>();
         characterController = player.GetComponent<CharacterController>();
         audioSource = GetComponent<AudioSource>();
         audioLowPassFilter = GetComponent<AudioLowPassFilter>();
         smoke = GetComponentInChildren<ParticleSystem>();
         rpmNeedle = transform.Find("Needle_RPM");
         speedNeedle = transform.Find("Needle_Speedometer");
+    }
 
+    void Start()
+    {
         if(startIntro)
             EnterCar();
     }
 
-    private void EnterCar()
+    public void EnterCar()
     {
         characterController.enabled = false;
         playerMovement.enabled = false;
@@ -48,6 +55,7 @@ public class Car : MonoBehaviour
 
     public void ExitCar()
     {
+        StartCoroutine(PlayDoorFX());
         characterController.enabled = true;
         playerMovement.enabled = true;
         cameraController.enabled = true;
@@ -60,6 +68,7 @@ public class Car : MonoBehaviour
         smoke.Play();
         StartCoroutine(DropNeedle(rpmNeedle));
         StartCoroutine(DropNeedle(speedNeedle));
+        StartCoroutine(playerAudio.StopIntroMusic(needleSpeed));
         audioSource.Stop();
         audioLowPassFilter.cutoffFrequency = 2000f;
         audioSource.loop = false;
@@ -97,6 +106,15 @@ public class Car : MonoBehaviour
         }
 
         needle.localRotation = Quaternion.identity;
+    }
+
+    private IEnumerator PlayDoorFX()
+    {
+        audioSource.clip = doorOpen;
+        audioSource.Play();
+        yield return new WaitForSeconds(doorOpen.length);
+        audioSource.clip = doorClose;
+        audioSource.Play();
     }
 
 #if UNITY_EDITOR

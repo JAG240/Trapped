@@ -6,25 +6,17 @@ public class Chase : KillerBaseState
 {
     public override void EnterState(KillerStateManager Manager)
     {
-        
+        Manager.agent.speed = 6f;
     }
 
     public override void UpdateState(KillerStateManager Manager)
     {
-        lookAt(Manager.player.position, Manager);
+        Manager.lookAt(Manager.player.position);
         Manager.agent.destination = Manager.player.position;
     }
 
     public override void ExitState(KillerStateManager Manager)
     {
-
-    }
-
-    private void lookAt(Vector3 target, KillerStateManager manager)
-    {
-        Vector3 lookDir = target - manager.transform.position;
-        lookDir.y = 0;
-        Quaternion end = Quaternion.LookRotation(lookDir);
-        manager.transform.rotation = end;
+        Manager.agent.speed = 3.5f;
     }
 }

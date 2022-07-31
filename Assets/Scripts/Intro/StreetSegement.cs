@@ -6,7 +6,7 @@ public class StreetSegement : MonoBehaviour
 {
     [field: SerializeField] public StreetBuilder streetBuilder { get; set; }
 
-    void LateUpdate()
+    void Update()
     {
         if (transform.position.x + transform.localScale.x <= streetBuilder.streetEnd)
         {

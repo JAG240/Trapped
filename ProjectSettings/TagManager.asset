@@ -7,6 +7,7 @@ TagManager:
   - Door
   - Killer
   - Bottle
+  - Street
   layers:
   - Default
   - TransparentFX

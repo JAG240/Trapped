@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private float movementSpeed;
     private PlayerControls playerControls;
     private CharacterController characterController;
+    private PlayerAudio playerAudio;
     private Vector3 characterVelocity;
     private float gravity;
     private bool isCrouched = false;
