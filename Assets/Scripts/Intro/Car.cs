@@ -56,11 +56,10 @@ public class Car : MonoBehaviour
     public void ExitCar()
     {
         StartCoroutine(PlayDoorFX());
+        player.transform.position = GetExitPosition();
         characterController.enabled = true;
         playerMovement.enabled = true;
         cameraController.enabled = true;
-
-        player.transform.position = GetExitPosition();
     }
 
     public void Stall()

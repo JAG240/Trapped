@@ -6,14 +6,16 @@ public class StreetSegement : MonoBehaviour
 {
     [field: SerializeField] public StreetBuilder streetBuilder { get; set; }
 
-    void Update()
+    void FixedUpdate()
     {
         if (transform.position.x + transform.localScale.x <= streetBuilder.streetEnd)
         {
             transform.position = streetBuilder.GetResetPos(transform);
-            return;
         }
+    }
 
+    private void LateUpdate()
+    {
         transform.position += streetBuilder.speed * Time.deltaTime;
     }
 }

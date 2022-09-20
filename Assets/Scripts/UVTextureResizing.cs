@@ -9,7 +9,7 @@ public class UVTextureResizing : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Start");
+        Debug.Log("Start" + gameObject.name);
         GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleFactor, transform.localScale.z / scaleFactor);
     }
 

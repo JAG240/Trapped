@@ -28,13 +28,13 @@ public class PlayerAudio : MonoBehaviour
     {
         if (characterController.velocity.magnitude > runningSpeed && !soundFXAudioSource.isPlaying)
         {
-            soundFXAudioSource.pitch = 2f;
+            soundFXAudioSource.pitch = 1.4f;
             soundFXAudioSource.clip = dirtyGroundFootsteps[Random.Range(0, dirtyGroundFootsteps.Count)];
             soundFXAudioSource.Play();
         }
         else if(characterController.velocity.magnitude > walkingSpeed && !soundFXAudioSource.isPlaying)
         {
-            soundFXAudioSource.pitch = 1f;
+            soundFXAudioSource.pitch = 0.7f;
             soundFXAudioSource.clip = dirtyGroundFootsteps[Random.Range(0, dirtyGroundFootsteps.Count)];
             soundFXAudioSource.Play();
         }

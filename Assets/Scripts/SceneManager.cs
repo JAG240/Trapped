@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class SceneManager : MonoBehaviour
 {
-    [SerializeField] private bool startIntro = true;
+    public bool startIntro = true;
     private Car car;
     [SerializeField] private GameObject player;
     private GameObject Killer;
