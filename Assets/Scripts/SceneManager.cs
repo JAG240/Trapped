@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,18 +6,27 @@ using UnityEngine.AI;
 
 public class SceneManager : MonoBehaviour
 {
+    [SerializeField] private GameObject player;
+    [field: SerializeField] public Vector3 playerRespawnPoint { get; private set; }
+    [field: SerializeField] public Vector3 killerRespawnPoint { get; private set; }
+
     public bool startIntro = true;
     private Car car;
-    [SerializeField] private GameObject player;
-    private GameObject Killer;
     private StreetBuilder streetBuilder;
+
+    public Action<KillerStateManager> playerDeath;
+    public Action resetLevel;
+
+    public Action<Car> enterCar;
+    public Action<Car> exitCar;
+
+    public Action introKill;
 
     void Start()
     {
         car = GameObject.Find("Car").GetComponent<Car>();
         player = GameObject.Find("Player");
         streetBuilder = GameObject.Find("StreetBuilder").GetComponent<StreetBuilder>();
-        Killer = GameObject.Find("Killer");
 
         if(startIntro)
         {
@@ -40,7 +50,26 @@ public class SceneManager : MonoBehaviour
 
     public void IntroAttack()
     {
-        Killer.GetComponent<NavMeshAgent>().Warp(player.transform.position - (player.transform.forward * 5f));
-        Killer.GetComponent<KillerStateManager>().lookAt(player.transform.position);
+        introKill.Invoke();
+    }
+
+    public void KillPlayer(KillerStateManager killer)
+    {
+        playerDeath.Invoke(killer);
+    }
+
+    public void ResetLevel()
+    {
+        resetLevel.Invoke();
+    }
+
+    public void EnterCar(Car car)
+    {
+        enterCar.Invoke(car);
+    }
+
+    public void ExitCar(Car car)
+    {
+        exitCar.Invoke(car);
     }
 }

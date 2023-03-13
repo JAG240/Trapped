@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Car : MonoBehaviour
 {
-    private GameObject player;
-    private PlayerMovement playerMovement;
-    private CameraController cameraController;
-    private PlayerAudio playerAudio;
-    private CharacterController characterController;
-    private AudioSource audioSource;
-    private AudioLowPassFilter audioLowPassFilter;
-    private ParticleSystem smoke;
-    private Transform rpmNeedle;
-    private Transform speedNeedle;
-    [SerializeField] private bool startIntro = false;
     [SerializeField] private Vector3 seatPosOffset;
     [SerializeField] private Vector3 lookPosOffset;
     [SerializeField] private Vector3 exitOffSet;
@@ -23,43 +12,36 @@ public class Car : MonoBehaviour
     [SerializeField] private AudioClip doorClose;
     [field: SerializeField] public float needleSpeed { get; private set; }
 
+    private GameObject player;
+    private PlayerAudio playerAudio;
+    private AudioSource audioSource;
+    private AudioLowPassFilter audioLowPassFilter;
+    private ParticleSystem smoke;
+    private Transform rpmNeedle;
+    private Transform speedNeedle;
+    private SceneManager sceneManager;
+
     private void Awake()
     {
         player = GameObject.Find("Player");
-        playerMovement = player.GetComponent<PlayerMovement>();
-        cameraController = player.GetComponentInChildren<CameraController>();
         playerAudio = player.GetComponent<PlayerAudio>();
-        characterController = player.GetComponent<CharacterController>();
         audioSource = GetComponent<AudioSource>();
         audioLowPassFilter = GetComponent<AudioLowPassFilter>();
         smoke = GetComponentInChildren<ParticleSystem>();
         rpmNeedle = transform.Find("Needle_RPM");
         speedNeedle = transform.Find("Needle_Speedometer");
-    }
-
-    void Start()
-    {
-        if(startIntro)
-            EnterCar();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
     }
 
     public void EnterCar()
     {
-        characterController.enabled = false;
-        playerMovement.enabled = false;
-        cameraController.enabled = false;
-
-        player.transform.position = GetSeatPosition();
-        player.transform.LookAt(GetLookPosition(), Vector3.up);
+        sceneManager.EnterCar(this);
     }
 
     public void ExitCar()
     {
         StartCoroutine(PlayDoorFX());
-        player.transform.position = GetExitPosition();
-        characterController.enabled = true;
-        playerMovement.enabled = true;
-        cameraController.enabled = true;
+        sceneManager.ExitCar(this);
     }
 
     public void Stall()
@@ -75,17 +57,17 @@ public class Car : MonoBehaviour
         audioSource.Play();
     }
 
-    private Vector3 GetSeatPosition()
+    public Vector3 GetSeatPosition()
     {
         return transform.position + seatPosOffset;
     }
 
-    private Vector3 GetLookPosition()
+    public Vector3 GetLookPosition()
     {
         return transform.position + lookPosOffset;
     }
 
-    private Vector3 GetExitPosition()
+    public Vector3 GetExitPosition()
     {
         return transform.position + exitOffSet;
     }

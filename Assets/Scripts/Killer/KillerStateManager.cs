@@ -9,15 +9,20 @@ public class KillerStateManager : MonoBehaviour
     public KillerBaseState DoTasks { get; private set; } = new DoTasks();
     public KillerBaseState Chase { get; private set; } = new Chase();
     public KillerBaseState Investigate { get; private set; } = new Investigate();
+    public KillerBaseState Kill { get; private set; } = new Kill();
 
     public NavMeshAgent agent;
     public Vector3 playerLastSeen = Vector3.zero;
 
     [field: SerializeField, Range(0, 100)] public float suspicion { get; private set; }
+    [SerializeField] public float killerReach;
+
     public RoomManager roomManager { get; private set; }
     public Detection detection { get; private set; }
     public Transform player { get; private set; }
     public KillerAnimator killerAnimator { get; private set; }
+    public SceneManager sceneManager { get; private set; }
+    public KillerAudio killerAudio { get; private set; }
 
     private void Awake()
     {
@@ -29,9 +34,16 @@ public class KillerStateManager : MonoBehaviour
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         killerAnimator = GetComponent<KillerAnimator>();
         detection = GetComponent<Detection>();
+        killerAudio = GetComponentInChildren<KillerAudio>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        player = GameObject.Find("Player").transform;
+
         suspicion = 0f;
 
         detection.detectedObject += seenObject;
+        sceneManager.resetLevel += ResetKiller;
+        sceneManager.introKill += IntroWarp;
+        sceneManager.resetLevel += ResetLevel;
 
         currentState = DoTasks;
         currentState.EnterState(this);
@@ -65,6 +77,11 @@ public class KillerStateManager : MonoBehaviour
         }
     }
 
+    private void ResetKiller()
+    {
+        SwitchState(DoTasks);
+    }
+
     public void lookAt(Vector3 target)
     {
         Vector3 lookDir = target - transform.position;
@@ -73,8 +90,22 @@ public class KillerStateManager : MonoBehaviour
         transform.rotation = end;
     }
 
+    private void IntroWarp()
+    {
+        agent.Warp(player.position - (player.forward * 2.5f));
+        lookAt(player.position);
+    }
+
+    private void ResetLevel()
+    {
+        agent.Warp(sceneManager.killerRespawnPoint);
+        SwitchState(DoTasks);
+    }
+
+    //Can be passed non-player object
     private void seenObject(GameObject obj)
     {
+        //Possible to set non-player object as last seen location
         if (!obj)
         {
             SwitchState(Investigate);

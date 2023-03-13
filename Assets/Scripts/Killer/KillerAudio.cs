@@ -5,15 +5,22 @@ using UnityEngine.Audio;
 
 public class KillerAudio : MonoBehaviour
 {
+    [Header("Audio Settings")]
     [SerializeField] float maxDistance = 25f;
     [SerializeField] float minPassVolume = 230f;
+
+    [Header("Audio Clips")]
     [SerializeField] private AudioClip step;
     [SerializeField] private AudioClip effortGrunt;
     [SerializeField] private AudioClip fullChop;
-    private Transform player;
+    [SerializeField] private AudioClip angryPig;
+
+    [Header("Source References")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource killerVoice;
+
     private AudioLowPassFilter lowPassFilter;
+    private Transform player;
 
     void Start()
     {
@@ -64,6 +71,14 @@ public class KillerAudio : MonoBehaviour
         UpdateLowPassFilter();
         killerVoice.pitch = 1f;
         killerVoice.clip = clip;
+        killerVoice.Play();
+    }
+
+    public void PlayAngryPig()
+    {
+        UpdateLowPassFilter();
+        killerVoice.pitch = 1f;
+        killerVoice.clip = angryPig;
         killerVoice.Play();
     }
 }

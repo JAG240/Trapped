@@ -11,17 +11,22 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpHeight;
     [SerializeField] private float walkCollisionPower;
     [SerializeField] private float runCollisionPower;
+    [SerializeField] private float smoothLookTime;
+
     private float collisionPower;
     private float movementSpeed;
     private PlayerControls playerControls;
     private CharacterController characterController;
-    private PlayerAudio playerAudio;
     private Vector3 characterVelocity;
     private float gravity;
+    private Transform eyes;
+    private SceneManager sceneManager;
+
     private bool isCrouched = false;
     private bool releaseCrouch = false;
-    private Transform eyes;
     private bool useGravity = true;
+    private bool movementDisabled = false;
+
 
     private void Start()
     {
@@ -31,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         gravity = Physics.gravity.y;
         eyes = transform.Find("Eyes");
         collisionPower = walkCollisionPower;
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
 
         playerControls.Basic.Run.performed += (context) => Run(true);
         playerControls.Basic.Run.canceled += (context) => Run(false);
@@ -39,6 +45,12 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Basic.Crouch.canceled += (context) => Uncrouch();
 
         playerControls.Basic.Jump.performed += (context) => Jump();
+
+        sceneManager.playerDeath += Die;
+        sceneManager.resetLevel += ResetLevel;
+
+        sceneManager.enterCar += EnterCar;
+        sceneManager.exitCar += ExitCar;
 
         movementSpeed = walkSpeed;
     }
@@ -58,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         if(useGravity)
             ApplyGravity();
 
-        if (playerControls.Basic.Walk.IsPressed())
+        if (playerControls.Basic.Walk.IsPressed() && !movementDisabled)
             Walk(playerControls.Basic.Walk.ReadValue<Vector2>());
 
         if (releaseCrouch)
@@ -128,6 +140,67 @@ public class PlayerMovement : MonoBehaviour
         characterController.center = Vector3.zero;
         movementSpeed = walkSpeed;
         eyes.localPosition = new Vector3(0f, 1f, 0.45f);
+    }
+
+    private void StopMovement(bool state)
+    {
+        movementDisabled = state;
+    }
+
+    private void EnterCar(Car car)
+    {
+        characterController.enabled = false;
+        StopMovement(true);
+        useGravity = false;
+
+        transform.position = car.GetSeatPosition();
+        transform.LookAt(car.GetLookPosition(), Vector3.up);
+    }
+
+    private void ExitCar(Car car)
+    {
+        transform.position = car.GetExitPosition();
+        characterController.enabled = true;
+        useGravity = true;
+        StopMovement(false);
+    }
+
+    private void Die(KillerStateManager killer)
+    {
+        StopMovement(true);
+        useGravity = false;
+        characterController.enabled = false;
+
+        StartCoroutine(SmoothLookAt(killer.transform));
+    }
+
+    private void ResetLevel()
+    {
+        transform.position = sceneManager.playerRespawnPoint;
+        transform.LookAt(-Vector3.right);
+
+        characterController.enabled = true;
+        useGravity = true;
+        StopMovement(false);
+    }
+
+    private IEnumerator SmoothLookAt(Transform target)
+    {
+        Quaternion lookRot = Quaternion.LookRotation(target.position - transform.position);
+        Quaternion startRot = new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+
+        float deltaTime = 0;
+
+        while(deltaTime < smoothLookTime)
+        {
+            float t = deltaTime / smoothLookTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, t);
+            yield return null;
+            deltaTime += Time.deltaTime;
+        }
+
+        transform.rotation = lookRot;
+        sceneManager.ResetLevel();
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
