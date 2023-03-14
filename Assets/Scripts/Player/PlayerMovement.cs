@@ -187,7 +187,6 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator SmoothLookAt(Transform target)
     {
         Quaternion lookRot = Quaternion.LookRotation(target.position - transform.position);
-        Quaternion startRot = new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
 
         float deltaTime = 0;
 

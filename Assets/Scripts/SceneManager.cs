@@ -6,13 +6,13 @@ using UnityEngine.AI;
 
 public class SceneManager : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
     [field: SerializeField] public Vector3 playerRespawnPoint { get; private set; }
     [field: SerializeField] public Vector3 killerRespawnPoint { get; private set; }
 
     public bool startIntro = true;
     private Car car;
     private StreetBuilder streetBuilder;
+    private GameObject player;
 
     public Action<KillerStateManager> playerDeath;
     public Action resetLevel;
@@ -50,26 +50,26 @@ public class SceneManager : MonoBehaviour
 
     public void IntroAttack()
     {
-        introKill.Invoke();
+        introKill?.Invoke();
     }
 
     public void KillPlayer(KillerStateManager killer)
     {
-        playerDeath.Invoke(killer);
+        playerDeath?.Invoke(killer);
     }
 
     public void ResetLevel()
     {
-        resetLevel.Invoke();
+        resetLevel?.Invoke();
     }
 
     public void EnterCar(Car car)
     {
-        enterCar.Invoke(car);
+        enterCar?.Invoke(car);
     }
 
     public void ExitCar(Car car)
     {
-        exitCar.Invoke(car);
+        exitCar?.Invoke(car);
     }
 }

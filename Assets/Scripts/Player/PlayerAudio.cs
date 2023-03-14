@@ -21,7 +21,7 @@ public class PlayerAudio : MonoBehaviour
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        characterController = GetComponentInChildren<CharacterController>();
     }
 
     private void FixedUpdate()

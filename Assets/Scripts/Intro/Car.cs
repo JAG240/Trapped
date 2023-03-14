@@ -24,7 +24,7 @@ public class Car : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player");
-        playerAudio = player.GetComponent<PlayerAudio>();
+        playerAudio = player.GetComponentInChildren<PlayerAudio>();
         audioSource = GetComponent<AudioSource>();
         audioLowPassFilter = GetComponent<AudioLowPassFilter>();
         smoke = GetComponentInChildren<ParticleSystem>();

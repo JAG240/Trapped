@@ -10,6 +10,7 @@ public class KillerStateManager : MonoBehaviour
     public KillerBaseState Chase { get; private set; } = new Chase();
     public KillerBaseState Investigate { get; private set; } = new Investigate();
     public KillerBaseState Kill { get; private set; } = new Kill();
+    public KillerBaseState Idle { get; private set; } = new Idle();
 
     public NavMeshAgent agent;
     public Vector3 playerLastSeen = Vector3.zero;
@@ -36,16 +37,15 @@ public class KillerStateManager : MonoBehaviour
         detection = GetComponent<Detection>();
         killerAudio = GetComponentInChildren<KillerAudio>();
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
-        player = GameObject.Find("Player").transform;
+        player = GameObject.Find("PlayerCapsule").transform;
 
         suspicion = 0f;
 
         detection.detectedObject += seenObject;
-        sceneManager.resetLevel += ResetKiller;
         sceneManager.introKill += IntroWarp;
         sceneManager.resetLevel += ResetLevel;
 
-        currentState = DoTasks;
+        currentState = Idle;
         currentState.EnterState(this);
     }
 
@@ -77,11 +77,6 @@ public class KillerStateManager : MonoBehaviour
         }
     }
 
-    private void ResetKiller()
-    {
-        SwitchState(DoTasks);
-    }
-
     public void lookAt(Vector3 target)
     {
         Vector3 lookDir = target - transform.position;
@@ -92,7 +87,7 @@ public class KillerStateManager : MonoBehaviour
 
     private void IntroWarp()
     {
-        agent.Warp(player.position - (player.forward * 2.5f));
+        agent.Warp(player.position - (Camera.main.transform.forward * 2.5f));
         lookAt(player.position);
     }
 
@@ -113,7 +108,7 @@ public class KillerStateManager : MonoBehaviour
             return;
         }
 
-        if (obj.name == "Player")
+        if (obj.name == "PlayerCapsule")
         {
             player = obj.transform;
             SwitchState(Chase);

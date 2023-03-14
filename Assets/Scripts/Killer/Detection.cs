@@ -50,7 +50,7 @@ public class Detection : MonoBehaviour
 
                     if (angle > detectionAngle || angle < -detectionAngle)
                     {
-                        if (playerInSight && obj.name ==  "Player")
+                        if (playerInSight && obj.name == "PlayerCapsule")
                             SetPlayerInSight(null);
 
                         continue;
@@ -62,13 +62,13 @@ public class Detection : MonoBehaviour
                     {
                         if (hit.transform.tag != "Killer")
                         {
-                            if(obj.name == "Player" && playerInSight)
+                            if(obj.name == "PlayerCapsule" && playerInSight)
                                 SetPlayerInSight(null);
 
                             continue;
                         }
 
-                        if(obj.name == "Player")
+                        if(obj.name == "PlayerCapsule")
                         {
                             if (playerInSight)
                                 continue;
