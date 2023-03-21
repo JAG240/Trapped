@@ -17,6 +17,7 @@ namespace StarterAssets
 		public float MoveSpeed = 4.0f;
 		[Tooltip("Sprint speed of the character in m/s")]
 		public float SprintSpeed = 6.0f;
+		public float CrouchSpeed = 3.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
@@ -65,8 +66,11 @@ namespace StarterAssets
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
+		private bool _isCrouched = false;
 
+		[Header("Custom Variables")]
 		public bool allowMovement = true;
+		public GameObject Capsule;
 
 	
 #if ENABLE_INPUT_SYSTEM
@@ -75,6 +79,7 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
+		private bool _releaseCrouch = false;
 
 		private const float _threshold = 0.01f;
 
@@ -122,6 +127,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			CheckCrouch();
 		}
 
 		private void LateUpdate()
@@ -194,7 +200,18 @@ namespace StarterAssets
 				return;
 
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			//float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
+			float targetSpeed = 0f;
+
+			if(!_isCrouched)
+            {
+				targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			}
+            else
+            {
+				targetSpeed = CrouchSpeed;
+            }
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -286,13 +303,37 @@ namespace StarterAssets
 			}
 		}
 
+		public void SetCrouch(bool state)
+        {
+			if(state)
+            {
+				//do crouch stuff
+				_isCrouched = true;
+				transform.localScale = new Vector3(1f, transform.localScale.y / 3, 1f);
+            }
+            else
+            {
+				//uncrouch stuff
+				_releaseCrouch = true;
+			}
+        }
+
+		private void CheckCrouch()
+        {
+			if (!_releaseCrouch || Physics.Raycast(transform.position + new Vector3(0f, transform.localScale.y * 2, 0f), transform.up, 2.2f))
+				return;
+
+			_releaseCrouch = false;
+			_isCrouched = false;
+			transform.localScale = new Vector3(1f, transform.localScale.y * 3, 1f);
+		}
+
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
 		}
-
 		private void OnDrawGizmosSelected()
 		{
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);

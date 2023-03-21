@@ -69,6 +69,15 @@ namespace StarterAssets
 		{
 			SprintInput(value.isPressed);
 		}
+
+		public void OnCrouch(InputValue value)
+		{
+			//1 for crouch pressed 0 for crouch released
+
+			//
+
+			firstPersonController.SetCrouch(value.Get<float>() == 1);
+		}
 #endif
 
 
