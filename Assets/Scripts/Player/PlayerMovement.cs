@@ -199,7 +199,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.rotation = lookRot;
-        sceneManager.ResetLevel();
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

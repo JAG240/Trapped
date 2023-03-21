@@ -40,6 +40,7 @@ namespace StarterAssets
 			sceneManager.exitCar += ExitCar;
 
 			sceneManager.playerDeath += Die;
+			sceneManager.resetLevel += ResetLevel;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -73,8 +74,6 @@ namespace StarterAssets
 		public void OnCrouch(InputValue value)
 		{
 			//1 for crouch pressed 0 for crouch released
-
-			//
 
 			firstPersonController.SetCrouch(value.Get<float>() == 1);
 		}
@@ -149,9 +148,23 @@ namespace StarterAssets
 			characterController.enabled = false;
 			movementDisabled = true;
 			cameraMovementDisabled = true;
+			SetCursorState(false);
 
 			firstPersonController.LookAt(killer.transform.position);
         }
-	}
+
+        private void ResetLevel()
+        {
+			transform.position = sceneManager.playerRespawnPoint;
+
+			firstPersonController.allowMovement = true;
+			movementDisabled = false;
+			cameraMovementDisabled = false;
+			SetCursorState(true);
+			characterController.enabled = true;
+
+			firstPersonController.LookAt(Vector3.right);
+		}
+    }
 	
 }
