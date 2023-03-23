@@ -4,24 +4,29 @@ using UnityEngine;
 public class UVTextureResizing : MonoBehaviour
 {
 
-    public float scaleFactor = 5.0f;
+    public float scaleZ = 5.0f;
+    public float scaleX = 5.0f;
+
+    private float _scaleZ = 0f;
+    private float _scaleX = 0f;
+
     Material mat;
+
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Start" + gameObject.name);
-        GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleFactor, transform.localScale.z / scaleFactor);
+        GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleX, transform.localScale.z / scaleZ);
     }
 
-    void Update()
+    private void OnDrawGizmos()
     {
-
-        if (transform.hasChanged && Application.isEditor && !Application.isPlaying)
+        if ((transform.hasChanged || scaleX != _scaleX || scaleZ != _scaleZ) && Application.isEditor && !Application.isPlaying)
         {
-            Debug.Log("The transform has changed!");
-            GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleFactor, transform.localScale.z / scaleFactor);
+            _scaleZ = scaleZ;
+            _scaleX = scaleX;
+
+            GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleX, transform.localScale.z / scaleZ);
             transform.hasChanged = false;
         }
-
     }
 }

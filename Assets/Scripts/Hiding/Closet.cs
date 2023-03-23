@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StarterAssets;
 
 public class Closet : Hiding, IInteractable, IPeekable
 {
@@ -23,23 +24,33 @@ public class Closet : Hiding, IInteractable, IPeekable
 
     public void Interact(GameObject player)
     {
-        if(!open)
+        StarterAssetsInputs inputs = player.GetComponentInChildren<StarterAssetsInputs>();
+        FirstPersonController inputController = player.GetComponentInChildren<FirstPersonController>();
+        CharacterController charController = player.GetComponentInChildren<CharacterController>();
+        Transform playerCapsule = inputs.transform;
+
+        if (!open)
         {
             open = true;
-            player.GetComponentInChildren<CameraController>().EnableCameraMovement(false);
-            player.transform.position = transform.position + characterOffset;
-            player.GetComponent<PlayerMovement>().enabled = false;
-            player.transform.LookAt(GetPosition() + characterOffset + (transform.up * 0.2f), Vector3.up);
+
+            charController.enabled = false;
+            inputs.movementDisabled = true;
+            inputs.cameraMovementDisabled = true;
+            playerCapsule.transform.position = transform.position + characterOffset;
+
+            inputController.LookAt(GetPosition() + characterOffset + (transform.up * 0.2f));
             hiding.IncreaseCounter();
             return;
         }
 
         open = false;
-        player.GetComponent<CharacterController>().enabled = false;
-        player.transform.position = transform.position + characterOffset + (-transform.right * 2);
-        player.GetComponent<PlayerMovement>().enabled = true;
-        player.GetComponent<CharacterController>().enabled = true;
-        player.GetComponentInChildren<CameraController>().EnableCameraMovement(true);
+
+        charController.enabled = false;
+        playerCapsule.transform.position = transform.position + characterOffset + (-transform.right * 2);
+
+        inputs.movementDisabled = false;
+        inputs.cameraMovementDisabled = false;
+        charController.enabled = true;
     }
 
     public void Peek(GameObject obj, bool state)
