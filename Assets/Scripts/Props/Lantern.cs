@@ -18,6 +18,11 @@ public class Lantern : Task
         StartCoroutine(Flicker());
     }
 
+    override public Vector3 GetTaskPosition()
+    {
+        return transform.position + (-transform.right * taskPosOffset);
+    }
+
     private IEnumerator Flicker()
     {
         bool inFlicker = false;

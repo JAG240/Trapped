@@ -39,7 +39,7 @@ public class Task : MonoBehaviour
         onCooldown = false;
     }
 
-    public Vector3 GetTaskPosition()
+    virtual public Vector3 GetTaskPosition()
     {
         return transform.position + (transform.forward * taskPosOffset);
     }

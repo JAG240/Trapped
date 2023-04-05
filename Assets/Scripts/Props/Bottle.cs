@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bottle : MonoBehaviour, IStateComparable
+public class Bottle : MonoBehaviour, IStateComparable, IInteractable
 {
     [SerializeField] private GameObject ghostPrefab;
     [SerializeField] private float susDistance = 1f;
@@ -79,5 +79,10 @@ public class Bottle : MonoBehaviour, IStateComparable
             audioSource.Play();
             roomManager.KillerInRoomAudio(gameObject);
         }
+    }
+
+    public void Interact(GameObject player)
+    {
+        player.GetComponent<PlayerInventory>().PutInHands(gameObject);
     }
 }

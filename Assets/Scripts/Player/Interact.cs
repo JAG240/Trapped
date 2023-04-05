@@ -5,26 +5,45 @@ using UnityEngine.InputSystem;
 
 public class Interact : MonoBehaviour
 {
-    private PlayerControls playerControls;
     private IPeekable objPeek;
     private GameObject peekedObj;
+    private LayerMask interactMask;
+    private LayerMask peekMask;
+    private PlayerInventory playerInventory;
 
     private void Start()
     {
-        playerControls = GameObject.Find("InputManager").GetComponent<InputManager>().playerControls;
-        playerControls.Basic.Interact.performed += (context) => Activate();
-        playerControls.Basic.Peek.performed += (context) => Peek();
-        playerControls.Basic.Peek.canceled += (context) => Unpeek();
+        interactMask = LayerMask.GetMask("Interactable", "Bottle");
+        peekMask = LayerMask.GetMask("Peekable");
+        playerInventory = GetComponent<PlayerInventory>();
+    }
+
+    private void OnInteract()
+    {
+        Activate();
+    }
+
+    private void OnPeek(InputValue value)
+    {
+        bool state = value.Get<float>() == 1;
+
+        if (state)
+            Peek();
+        else
+            Unpeek();
     }
 
     private void Activate()
     {
-        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, LayerMask.GetMask("Interactable"));
+        if (playerInventory.HandsFull())
+            playerInventory.DropItem();
+
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, interactMask);
 
         if (hits.Length > 0)
         {
-            GameObject obj = hits[0].transform.parent.gameObject;
-            IInteractable objInteract = obj.transform.GetComponent<IInteractable>();
+            GameObject obj = hits[0].transform.gameObject;
+            IInteractable objInteract = obj.GetComponent<IInteractable>();
 
             if (objInteract != null)
             {
@@ -35,7 +54,10 @@ public class Interact : MonoBehaviour
 
     private void Peek()
     {
-        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, LayerMask.GetMask("Peekable"));
+        if (playerInventory.HandsFull())
+            playerInventory.ThrowItem();
+
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, peekMask);
 
         if (hits.Length > 0)
         {

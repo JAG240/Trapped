@@ -36,6 +36,7 @@ public class Closet : Hiding, IInteractable, IPeekable
             charController.enabled = false;
             inputs.movementDisabled = true;
             inputs.cameraMovementDisabled = true;
+            inputs.StopMovement();
             playerCapsule.transform.position = transform.position + characterOffset;
 
             inputController.LookAt(GetPosition() + characterOffset + (transform.up * 0.2f));

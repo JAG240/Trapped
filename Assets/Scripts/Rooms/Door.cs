@@ -95,6 +95,9 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 
     public void Peek(GameObject obj, bool state)
     {
+        if (isLocked)
+            return;
+
         if (state)
             RotateDoor(peekAngle);
         else
