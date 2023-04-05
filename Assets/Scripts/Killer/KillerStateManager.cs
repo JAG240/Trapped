@@ -45,7 +45,7 @@ public class KillerStateManager : MonoBehaviour
         sceneManager.introKill += IntroWarp;
         sceneManager.resetLevel += ResetLevel;
 
-        currentState = Idle;
+        currentState = DoTasks;
         currentState.EnterState(this);
     }
 

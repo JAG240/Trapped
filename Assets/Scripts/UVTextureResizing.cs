@@ -16,6 +16,7 @@ public class UVTextureResizing : MonoBehaviour
     void Start()
     {
         GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleX, transform.localScale.z / scaleZ);
+        Application.quitting += DestroyThis;
     }
 
     private void OnDrawGizmos()
@@ -28,5 +29,10 @@ public class UVTextureResizing : MonoBehaviour
             GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x / scaleX, transform.localScale.z / scaleZ);
             transform.hasChanged = false;
         }
+    }
+
+    private void DestroyThis()
+    {
+        DestroyImmediate(this);
     }
 }

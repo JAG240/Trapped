@@ -7,13 +7,19 @@ public class Room : MonoBehaviour
     private RoomManager roomManager;
     private List<Task> taskList = new List<Task>();
     private List<Hiding> hidingList = new List<Hiding>();
+    private bool registered = false;
+
+    [field: SerializeField] public bool agentAccessible { get; private set; } = false;
     public List<Door> doorList = new List<Door>();
-    public int visitCount { get; private set; }
+    [field:SerializeField] public int visitCount { get; private set; }
 
     void Start()
     {
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         roomManager.AddRoom(this);
+
+        CheckToRegisterRoom();
+
         visitCount = 0;
     }
 
@@ -98,5 +104,41 @@ public class Room : MonoBehaviour
     public Hiding GetRandomHiding()
     {
         return hidingList[Random.Range(0, hidingList.Count)];
+    }
+
+    public void RefreshAllRooms()
+    {
+        roomManager.RefreshAllRooms();
+    }
+
+    public void CheckToRegisterRoom()
+    {
+        if (registered)
+            return;
+
+        if(agentAccessible && !registered)
+        {
+            roomManager.RegisterRoom(this);
+            registered = true;
+            return;
+        }
+
+        foreach(Door door in doorList)
+        {
+            if (door.isLocked)
+                continue;
+
+            foreach(Room room in door.roomList)
+            {
+                if(room.agentAccessible)
+                {
+                    roomManager.RegisterRoom(this);
+                    registered = true;
+                    agentAccessible = true;
+                    return;
+                }
+            }
+        }
+
     }
 }

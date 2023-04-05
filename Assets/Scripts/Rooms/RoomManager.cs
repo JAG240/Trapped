@@ -8,6 +8,7 @@ public class RoomManager : MonoBehaviour
     private static RoomManager instance;
     public static RoomManager Instance { get { return instance; } }
 
+    [SerializeField] private List<Room> activeRoomList = new List<Room>();
     private List<Room> roomList = new List<Room>();
     public Room playerCurrentRoom { get; private set; }
     public Room killerCurrentRoom { get; private set; }
@@ -22,6 +23,14 @@ public class RoomManager : MonoBehaviour
             instance = this;
     }
 
+    public void RegisterRoom(Room room)
+    {
+        if (!activeRoomList.Contains(room))
+            activeRoomList.Add(room);
+        else
+            Debug.LogError($"{room.transform.parent.name} was already added");
+    }
+
     public void AddRoom(Room room)
     {
         if (!roomList.Contains(room))
@@ -30,9 +39,17 @@ public class RoomManager : MonoBehaviour
             Debug.LogError($"{room.transform.name} was already added");
     }
 
+    public void RefreshAllRooms()
+    {
+        foreach(Room room in roomList)
+        {
+            room.CheckToRegisterRoom();
+        }
+    }
+
     public void RemoveRoom(Room room)
     {
-        roomList.Remove(room);
+        activeRoomList.Remove(room);
     }
 
     public void UpdatePlayerCurrentRoom(Room room)
@@ -97,14 +114,14 @@ public class RoomManager : MonoBehaviour
 
     public Room GetMostVisitedRoom()
     {
-        roomList.Sort(new MostVistedRoomComparer());
+        activeRoomList.Sort(new MostVistedRoomComparer());
 
-        return roomList[0];
+        return activeRoomList[0];
     }
 
     public Room GetRandomRoom()
     {
-        return roomList[Random.Range(0, roomList.Count)];
+        return activeRoomList[Random.Range(0, activeRoomList.Count)];
     }
 
     public Task GetRandomTask()
@@ -116,7 +133,7 @@ public class RoomManager : MonoBehaviour
     {
         List<Room> rooms = new List<Room>();
 
-        foreach(Room room in roomList)
+        foreach(Room room in activeRoomList)
         {
             if (room.doorList.Contains(door))
                 rooms.Add(room);

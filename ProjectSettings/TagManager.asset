@@ -8,6 +8,7 @@ TagManager:
   - Killer
   - Bottle
   - Street
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Door
   - Bottle
   - Killer
-  - 
+  - Ground
   - 
   - 
   - 

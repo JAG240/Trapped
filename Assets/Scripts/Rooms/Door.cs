@@ -1,16 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 {
+
+    [Header("Build settings")]
+    [SerializeField] private bool activeDoor = true;
+    [SerializeField] private bool registerDoor = true;
+    [field: SerializeField] public bool isLocked { get; private set; } = false;
+
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip openDoor;
+    [SerializeField] private AudioClip closeDoor;
+
+    [Header("Runtime Vars")]
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private float peekAngle = 5f;
     [SerializeField] private bool isSus = false;
-    [SerializeField] private AudioClip openDoor;
-    [SerializeField] private AudioClip closeDoor;
-    [SerializeField] private bool activeDoor = true;
-    [SerializeField] private bool registerDoor = true;
+    [SerializeField] private NavMeshObstacle navMeshLock;
+
     private AudioSource audioSource;
     private List<Lock> locks;
 
@@ -23,6 +33,11 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         door = transform.Find("door").gameObject;
         audioSource = GetComponent<AudioSource>();
         locks = new List<Lock>(gameObject.GetComponentsInChildren<Lock>());
+
+        if (locks.Count <= 0)
+            navMeshLock.enabled = false;
+        else
+            isLocked = true;
 
         if (!registerDoor)
             return;
@@ -106,14 +121,35 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
 
     private bool CheckLocks(PlayerInventory playerInventory)
     {
-        if (locks.Count <= 0)
+        if (!isLocked)
             return true;
+
+        if (isLocked && locks.Count <= 0)
+        {
+            isLocked = false;
+
+            foreach(Room room in roomList)
+            {
+                room.CheckToRegisterRoom();
+            }
+
+            if (roomList.Count > 0)
+                roomList[0].RefreshAllRooms();
+
+            return true;
+        }
 
         for(int i = 0; i < locks.Count; i++)
         {
             if (locks[i].Unlock(playerInventory))
             {
                 locks.RemoveAt(i);
+
+                if(locks.Count <= 0 && navMeshLock)
+                {
+                    navMeshLock.enabled = false;
+                }
+
                 break;
             }
         }
