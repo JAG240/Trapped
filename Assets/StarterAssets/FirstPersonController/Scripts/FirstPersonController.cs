@@ -67,6 +67,7 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 		private bool _isCrouched = false;
+		private int crouchLayerMask;
 
 		[Header("Custom Variables")]
 		public bool allowMovement = true;
@@ -117,6 +118,8 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+
+			crouchLayerMask =~ LayerMask.GetMask("Player");
 		}
 
 		private void Update()
@@ -320,7 +323,9 @@ namespace StarterAssets
 
 		private void CheckCrouch()
         {
-			if (!_releaseCrouch || Physics.Raycast(transform.position + new Vector3(0f, transform.localScale.y * 2, 0f), transform.up, 2.2f))
+			//Physics.Raycast(transform.position + new Vector3(0f, transform.localScale.y * 2, 0f), transform.up, 2.2f
+
+			if (!_releaseCrouch || Physics.CheckSphere(transform.position + new Vector3(0f, transform.localScale.y * 2 + 0.5f, 0f), 0.5f,crouchLayerMask))
 				return;
 
 			_releaseCrouch = false;

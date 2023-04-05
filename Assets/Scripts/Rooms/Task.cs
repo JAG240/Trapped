@@ -13,7 +13,12 @@ public class Task : MonoBehaviour
     protected virtual void Start()
     {
         if(RegisterTask)
-            transform.parent.GetComponentInChildren<Room>().AddRoomItem<Task>(this);
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position, 1f, LayerMask.GetMask("Room"));
+
+            if (hits.Length > 0)
+                hits[0].transform.GetComponent<Room>().AddRoomItem<Task>(this);
+        }
     }
 
     public void CompleteTask()

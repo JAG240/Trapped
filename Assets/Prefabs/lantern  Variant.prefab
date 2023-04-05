@@ -204,6 +204,7 @@ MonoBehaviour:
   taskTime: 5
   taskPosOffset: 1
   onCooldown: 0
+  RegisterTask: 0
   showTaskPosition: 0
   minIntensity: 0.6
   maxIntensity: 1
