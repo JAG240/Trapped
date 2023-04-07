@@ -35,9 +35,6 @@ public class Interact : MonoBehaviour
 
     private void Activate()
     {
-        if (playerInventory.HandsFull())
-            playerInventory.DropItem();
-
         RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, interactMask);
 
         if (hits.Length > 0)
@@ -48,15 +45,24 @@ public class Interact : MonoBehaviour
             if (objInteract != null)
             {
                 objInteract.Interact(gameObject);
+                return;
+            }
+
+            IInteractable parentInteract = obj.transform.parent.GetComponent<IInteractable>();
+
+            if(parentInteract != null)
+            {
+                parentInteract.Interact(gameObject);
+                return;
             }
         }
+
+        if (playerInventory.HandsFull())
+            playerInventory.DropItem();
     }
 
     private void Peek()
     {
-        if (playerInventory.HandsFull())
-            playerInventory.ThrowItem();
-
         RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, peekMask);
 
         if (hits.Length > 0)
@@ -67,8 +73,12 @@ public class Interact : MonoBehaviour
             if (objPeek != null)
             {
                 objPeek.Peek(peekedObj.transform.gameObject, true);
+                return;
             }
         }
+
+        if (playerInventory.HandsFull())
+            playerInventory.ThrowItem();
     }
 
     private void Unpeek()

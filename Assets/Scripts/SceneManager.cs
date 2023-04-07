@@ -33,10 +33,6 @@ public class SceneManager : MonoBehaviour
             player.GetComponent<PlayerAudio>().StartIntroMusic();
             car.EnterCar();
         }
-        else
-        {
-            StartGame();
-        }
     }
 
     public void StartGame()

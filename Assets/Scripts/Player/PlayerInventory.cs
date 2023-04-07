@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    [SerializeField] private Transform handPos;
+    [SerializeField] private Transform rightHandPos;
+    [SerializeField] private Transform LeftHandPos;
     [SerializeField] private float throwForce;
     private List<string> keys = new List<string>();
     private GameObject heldItem = null;
@@ -23,7 +24,7 @@ public class PlayerInventory : MonoBehaviour
     {
         heldItem = obj;
 
-        obj.transform.position = handPos.position;
+        obj.transform.position = rightHandPos.position;
 
         objBody = obj.GetComponent<Rigidbody>();
         objCollider = obj.GetComponent<Collider>();
@@ -34,14 +35,15 @@ public class PlayerInventory : MonoBehaviour
         if (objCollider)
             objCollider.enabled = false;
 
-        obj.transform.position = handPos.position;
-        obj.transform.rotation = handPos.rotation;
-        obj.transform.parent = handPos;
+        obj.transform.position = rightHandPos.position;
+        obj.transform.rotation = rightHandPos.rotation;
+        obj.transform.parent = rightHandPos;
     }
 
     public void DropItem()
     {
         heldItem.transform.parent = null;
+        heldItem.transform.position = Camera.main.transform.position + Camera.main.transform.forward;
 
         if (objBody)
             objBody.isKinematic = false;
@@ -60,7 +62,7 @@ public class PlayerInventory : MonoBehaviour
 
         DropItem();
 
-        body.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+        body.AddForce(Camera.main.transform.forward * throwForce, ForceMode.Impulse);
     }
 
     public bool ConsumeKey(string key)

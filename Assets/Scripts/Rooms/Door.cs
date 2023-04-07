@@ -157,6 +157,11 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
             }
         }
 
+        if (locks.Count <= 0)
+        {
+            CheckLocks(playerInventory);
+        }
+
         return false;
     }
 }

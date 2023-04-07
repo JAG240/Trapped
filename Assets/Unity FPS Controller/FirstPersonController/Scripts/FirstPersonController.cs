@@ -308,11 +308,15 @@ namespace StarterAssets
 
 		public void SetCrouch(bool state)
         {
-			if(state)
+			if(state && !_isCrouched)
             {
 				//do crouch stuff
 				_isCrouched = true;
 				transform.localScale = new Vector3(1f, transform.localScale.y / 3, 1f);
+            }
+			else if(state && _isCrouched)
+            {
+				_releaseCrouch = false;
             }
             else
             {
