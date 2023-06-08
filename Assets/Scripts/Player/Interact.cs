@@ -40,6 +40,15 @@ public class Interact : MonoBehaviour
         if (hits.Length > 0)
         {
             GameObject obj = hits[0].transform.gameObject;
+
+            PlaceableArea placeObj = obj.GetComponent<PlaceableArea>();
+
+            if (placeObj != null && !playerInventory.HandsFull(true))
+            {
+                placeObj.RemoveFromPlace(gameObject);
+                return;
+            }
+
             IInteractable objInteract = obj.GetComponent<IInteractable>();
 
             if (objInteract != null)
@@ -47,6 +56,9 @@ public class Interact : MonoBehaviour
                 objInteract.Interact(gameObject);
                 return;
             }
+
+            if (obj.transform.parent == null)
+                return;
 
             IInteractable parentInteract = obj.transform.parent.GetComponent<IInteractable>();
 
@@ -57,8 +69,10 @@ public class Interact : MonoBehaviour
             }
         }
 
-        if (playerInventory.HandsFull())
-            playerInventory.DropItem();
+        if (playerInventory.HandsFull(true))
+            playerInventory.DropItem(true);
+        else if (playerInventory.HandsFull(false))
+            playerInventory.DropItem(false);
     }
 
     private void Peek()
@@ -77,7 +91,7 @@ public class Interact : MonoBehaviour
             }
         }
 
-        if (playerInventory.HandsFull())
+        if (playerInventory.HandsFull(true))
             playerInventory.ThrowItem();
     }
 

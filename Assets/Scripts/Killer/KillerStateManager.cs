@@ -14,6 +14,8 @@ public class KillerStateManager : MonoBehaviour
 
     public NavMeshAgent agent;
     public Vector3 playerLastSeen = Vector3.zero;
+    public Room noisyRoom = null;
+    public Transform noise = null;
 
     [field: SerializeField, Range(0, 100)] public float suspicion { get; private set; }
     [SerializeField] public float killerReach;
@@ -24,6 +26,8 @@ public class KillerStateManager : MonoBehaviour
     public KillerAnimator killerAnimator { get; private set; }
     public SceneManager sceneManager { get; private set; }
     public KillerAudio killerAudio { get; private set; }
+    [field: SerializeField] public float walkSpeed { get; private set; } = 3.5f;
+    [field: SerializeField] public float runSpeed { get; private set; } = 6f;
 
     private void Awake()
     {
@@ -44,6 +48,7 @@ public class KillerStateManager : MonoBehaviour
         detection.detectedObject += seenObject;
         sceneManager.introKill += IntroWarp;
         sceneManager.resetLevel += ResetLevel;
+        roomManager.killerHearing += HeardSound;
 
         currentState = DoTasks;
         currentState.EnterState(this);
@@ -115,5 +120,14 @@ public class KillerStateManager : MonoBehaviour
         }
         else
             Debug.Log($"{obj.name} seen!");
+    }
+
+    private void HeardSound(Room audioRoom, Transform audioSource)
+    {
+        noisyRoom = audioRoom;
+        noise = audioSource;
+        SwitchState(Investigate);
+
+        Debug.Log($"Killer heard something in {audioRoom.transform.parent.name}");
     }
 }

@@ -27,6 +27,11 @@ public class KillerAnimator : MonoBehaviour
         animator.SetBool("Chop", state);
     }
 
+    public void SetCheck(bool state)
+    {
+        animator.SetBool("OpenCloset", state);
+    }
+
     public float GetAnimationLength()
     {
         return animator.GetCurrentAnimatorStateInfo(0).length;

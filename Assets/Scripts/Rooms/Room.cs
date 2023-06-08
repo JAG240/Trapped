@@ -6,6 +6,7 @@ public class Room : MonoBehaviour
 {
     private RoomManager roomManager;
     private List<Task> taskList = new List<Task>();
+    private List<ChopTable> chopTables = new List<ChopTable>();
     private List<Hiding> hidingList = new List<Hiding>();
     private bool registered = false;
 
@@ -38,7 +39,16 @@ public class Room : MonoBehaviour
 
     public void AddRoomItem<T>(T item)
     {
-        if(item as Task)
+        if (item as ChopTable)
+        {
+            ChopTable table = item as ChopTable;
+
+            if (!chopTables.Contains(table))
+                chopTables.Add(table);
+            else
+                Debug.LogError($"{table.name} already added to chop table");
+        }
+        else if(item as Task)
         {
             Task task = item as Task;
 

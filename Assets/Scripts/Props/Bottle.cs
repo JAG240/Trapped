@@ -70,19 +70,18 @@ public class Bottle : MonoBehaviour, IStateComparable, IInteractable
         {
             audioSource.clip = bigDrop;
             audioSource.Play();
-            roomManager.KillerInRoomAudio(gameObject);
-            roomManager.KillerInConnectedRoomAudio(gameObject);
+            roomManager.GlobalAudioAlert(gameObject);
         }
         else if(collision.relativeVelocity.magnitude > audioForce)
         {
             audioSource.clip = smallDrop;
             audioSource.Play();
-            roomManager.KillerInRoomAudio(gameObject);
+            roomManager.GlobalAudioAlert(gameObject);
         }
     }
 
     public void Interact(GameObject player)
     {
-        player.GetComponent<PlayerInventory>().PutInHands(gameObject);
+        player.GetComponent<PlayerInventory>().PutInHands(gameObject, true);
     }
 }

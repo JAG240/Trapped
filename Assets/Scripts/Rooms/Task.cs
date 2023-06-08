@@ -21,7 +21,7 @@ public class Task : MonoBehaviour
         }
     }
 
-    public void CompleteTask()
+    public virtual void CompleteTask()
     {
         onCooldown = true;
         StartCoroutine(StartCooldown());

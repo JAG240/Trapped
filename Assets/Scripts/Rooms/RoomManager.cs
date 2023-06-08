@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class RoomManager : MonoBehaviour
     private List<Room> roomList = new List<Room>();
     public Room playerCurrentRoom { get; private set; }
     public Room killerCurrentRoom { get; private set; }
+    public Action<Room, Transform> killerHearing;
 
     private void Awake()
     {
@@ -106,6 +108,21 @@ public class RoomManager : MonoBehaviour
         return false;
     }
 
+    public bool GlobalAudioAlert(GameObject audioSource)
+    {
+        Room audioRoom = GetRoom(audioSource.transform);
+
+        if (!audioRoom)
+        {
+            Debug.Log($"Audio room cannot be found for {audioSource.name}");
+            return false;
+        }
+
+        killerHearing?.Invoke(audioRoom, audioSource.transform);
+
+        return true;
+    }
+
     public Room GetRoom(Transform pos)
     {
         Collider[] hits = Physics.OverlapSphere(pos.position, 0.2f, LayerMask.GetMask("Room"));
@@ -121,7 +138,7 @@ public class RoomManager : MonoBehaviour
 
     public Room GetRandomRoom()
     {
-        return activeRoomList[Random.Range(0, activeRoomList.Count)];
+        return activeRoomList[UnityEngine.Random.Range(0, activeRoomList.Count)];
     }
 
     public Task GetRandomTask()

@@ -6,7 +6,7 @@ public class Chase : KillerBaseState
 {
     public override void EnterState(KillerStateManager Manager)
     {
-        Manager.agent.speed = 6f;
+        Manager.agent.speed = Manager.runSpeed;
     }
 
     public override void UpdateState(KillerStateManager Manager)
@@ -22,6 +22,6 @@ public class Chase : KillerBaseState
 
     public override void ExitState(KillerStateManager Manager)
     {
-        Manager.agent.speed = 3.5f;
+        Manager.agent.speed = Manager.walkSpeed;
     }
 }

@@ -119,7 +119,7 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 
-			crouchLayerMask =~ LayerMask.GetMask("Player");
+			crouchLayerMask =~ LayerMask.GetMask("Player", "Room");
 		}
 
 		private void Update()

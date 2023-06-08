@@ -7,77 +7,90 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Transform rightHandPos;
     [SerializeField] private Transform LeftHandPos;
     [SerializeField] private float throwForce;
-    private List<string> keys = new List<string>();
-    private GameObject heldItem = null;
-    private Rigidbody objBody = null;
-    private Collider objCollider = null;
 
-    public bool HandsFull()
+    private List<string> keys = new List<string>();
+
+    private Hand rightHeldItem = new Hand();
+    private Hand leftHeldItem = new Hand();
+
+
+    private class Hand
     {
-        if (heldItem)
+        public GameObject heldItem = null;
+        public Rigidbody objBody = null;
+        public Collider objCollider = null;
+    }
+
+    public bool HandsFull(bool rightHand)
+    {
+        Hand hand = rightHand ? ref rightHeldItem : ref leftHeldItem;
+
+        if (hand.heldItem)
             return true;
 
         return false;
     }
 
-    public void PutInHands(GameObject obj)
+    public void PutInHands(GameObject obj, bool rightHand)
     {
-        heldItem = obj;
+        Hand hand = rightHand ? ref rightHeldItem : ref leftHeldItem;
 
-        obj.transform.position = rightHandPos.position;
+        hand.heldItem = obj;
 
-        objBody = obj.GetComponent<Rigidbody>();
-        objCollider = obj.GetComponent<Collider>();
+        hand.objBody = obj.GetComponent<Rigidbody>();
+        hand.objCollider = obj.GetComponent<Collider>();
 
-        if(objBody)
-            objBody.isKinematic = true;
+        if(hand.objBody)
+            hand.objBody.isKinematic = true;
 
-        if (objCollider)
-            objCollider.enabled = false;
+        if (hand.objCollider)
+            hand.objCollider.enabled = false;
 
-        obj.transform.position = rightHandPos.position;
-        obj.transform.rotation = rightHandPos.rotation;
-        obj.transform.parent = rightHandPos;
+        obj.transform.position = rightHand ? rightHandPos.position : LeftHandPos.position;
+        obj.transform.rotation = rightHand ? rightHandPos.rotation : LeftHandPos.rotation;
+        obj.transform.parent = rightHand ? rightHandPos : LeftHandPos;
     }
 
-    public void DropItem()
+    public void DropItem(bool rightHand)
     {
-        heldItem.transform.parent = null;
-        heldItem.transform.position = Camera.main.transform.position + Camera.main.transform.forward;
+        Hand hand = rightHand ? ref rightHeldItem : ref leftHeldItem;
+        
+        hand.heldItem.transform.parent = null;
+        hand.heldItem.transform.position = Camera.main.transform.position + Camera.main.transform.forward;
 
-        if (objBody)
-            objBody.isKinematic = false;
+        if (hand.objBody)
+            hand.objBody.isKinematic = false;
 
-        if (objCollider)
-            objCollider.enabled = true;
+        if (hand.objCollider)
+            hand.objCollider.enabled = true;
 
-        heldItem = null;
-        objCollider = null;
-        objBody = null;
+        hand.heldItem = null;
+        hand.objBody = null;
+        hand.objCollider = null;
     }
 
     public void ThrowItem()
     {
-        Rigidbody body = objBody;
+        Rigidbody body = rightHeldItem.objBody;
 
-        DropItem();
+        DropItem(true);
 
         body.AddForce(Camera.main.transform.forward * throwForce, ForceMode.Impulse);
     }
 
     public bool ConsumeKey(string key)
     {
-        if(keys.Contains(key))
+        if (!leftHeldItem.heldItem)
+            return false;
+
+        Key heldKey = leftHeldItem.heldItem.GetComponent<Key>();
+
+        if (heldKey.keyID == key)
         {
-            keys.Remove(key);
+            Destroy(leftHeldItem.heldItem);
             return true;
         }
 
         return false;
-    }
-
-    public void AddKey(string key)
-    {
-        keys.Add(key);
     }
 }

@@ -54,6 +54,22 @@ public class Closet : Hiding, IInteractable, IPeekable
         charController.enabled = true;
     }
 
+    public void OpenDoors(bool state)
+    {
+        if(state)
+        {
+            //open doors
+            doors[0].transform.RotateAround(doors[0].transform.position, Vector3.up, 90);
+            doors[1].transform.RotateAround(doors[1].transform.position, Vector3.up, -90);
+        }
+        else
+        {
+            //close doors
+            doors[0].transform.RotateAround(doors[0].transform.position, Vector3.up, -90);
+            doors[1].transform.RotateAround(doors[1].transform.position, Vector3.up, 90);
+        }
+    }
+
     public void Peek(GameObject obj, bool state)
     {
         GameObject door = obj.name == "Door_L" ? doors[0] : doors[1];

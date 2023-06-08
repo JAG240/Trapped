@@ -69,6 +69,7 @@ public class DoTasks : KillerBaseState
 
         taskAssigned = false;
         doingTask = false;
+        prevTask = null;
     }
 
     private IEnumerator WaitForTask(float timer, KillerStateManager Manager)

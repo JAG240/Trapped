@@ -6,8 +6,9 @@ public class Key : MonoBehaviour, IInteractable
 {
     [field: SerializeField] public string keyID { get; private set; }
     private AudioSource audioSource;
-    private MeshRenderer mesh;
-    private CapsuleCollider capCollider;
+    [SerializeField] private Material material;
+    [SerializeField] private Material defaultMaterial;
+    [SerializeField] private Material renderOnTop;
 
     private void Start()
     {
@@ -15,22 +16,19 @@ public class Key : MonoBehaviour, IInteractable
             Debug.LogError($"{name} does not have a keyID!");
 
         audioSource = GetComponent<AudioSource>();
-        mesh = GetComponent<MeshRenderer>();
-        capCollider = GetComponentInChildren<CapsuleCollider>();
+        material = GetComponent<MeshRenderer>().material;
     }
 
     public void Interact(GameObject player)
     {
-        mesh.enabled = false;
-        capCollider.enabled = false;
-        player.GetComponent<PlayerInventory>().AddKey(keyID);
-        StartCoroutine(Pickup());
-    }
+        PlayerInventory inventory = player.GetComponent<PlayerInventory>();
 
-    private IEnumerator Pickup()
-    {
+        if (inventory.HandsFull(false))
+        {
+            inventory.DropItem(false);
+        }
+
+        inventory.PutInHands(gameObject, false);
         audioSource.Play();
-        yield return new WaitForSeconds(audioSource.clip.length);
-        Destroy(gameObject);
     }
 }
