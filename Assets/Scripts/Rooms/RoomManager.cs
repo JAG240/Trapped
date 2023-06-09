@@ -146,6 +146,12 @@ public class RoomManager : MonoBehaviour
         return GetRandomRoom().GetRandomTask();
     }
 
+    public ChopTable CheckForChop(Transform killer)
+    {
+        Room killerRoom = GetRoom(killer);
+        return killerRoom.GetChopTask();
+    }
+
     public List<Room> GetConnectedRooms(Door door)
     {
         List<Room> rooms = new List<Room>();

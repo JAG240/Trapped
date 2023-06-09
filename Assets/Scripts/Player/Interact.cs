@@ -43,7 +43,7 @@ public class Interact : MonoBehaviour
 
             PlaceableArea placeObj = obj.GetComponent<PlaceableArea>();
 
-            if (placeObj != null && !playerInventory.HandsFull(true))
+            if (placeObj != null && !playerInventory.HandsFull(true) && placeObj.placedObject != null)
             {
                 placeObj.RemoveFromPlace(gameObject);
                 return;

@@ -26,6 +26,16 @@ public class DoTasks : KillerBaseState
         if (taskAssigned)
             return;
 
+        ChopTable chopTask = Manager.roomManager.CheckForChop(Manager.transform);
+
+        if (chopTask)
+        {
+            taskAssigned = true;
+            Manager.agent.destination = chopTask.GetTaskPosition();
+            prevTask = chopTask;
+            return;
+        }
+
         taskAssigned = true;
         Task newTask = null;
 

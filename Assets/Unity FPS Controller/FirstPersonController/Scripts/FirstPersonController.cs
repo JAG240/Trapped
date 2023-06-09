@@ -183,6 +183,9 @@ namespace StarterAssets
 			Quaternion lookRot = Quaternion.LookRotation(target - transform.position);
 			lookRot = Quaternion.Euler(0f, lookRot.eulerAngles.y, 0f);
 
+			CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0.0f, 0.0f);
+			_cinemachineTargetPitch = 0f;
+
 			float deltaTime = 0;
 
 			while (deltaTime < smoothLookTime)

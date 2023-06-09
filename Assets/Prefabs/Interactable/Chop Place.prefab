@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 560679256774831031}
   - component: {fileID: 2181844608522034126}
   - component: {fileID: 2181844608522034127}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Chop Place
   m_TagString: Untagged
   m_Icon: {fileID: 0}

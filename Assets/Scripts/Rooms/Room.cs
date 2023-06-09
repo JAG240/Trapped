@@ -88,6 +88,20 @@ public class Room : MonoBehaviour
         return null;
     }
 
+    public ChopTable GetChopTask()
+    {
+        if(chopTables.Count > 0)
+        {
+            foreach(ChopTable table in chopTables)
+            {
+                if (table.HasItem())
+                    return table;
+            }
+        }
+
+        return null;
+    }
+
     public Hiding GetMostVisitedHiding()
     {
         hidingList.Sort(new MostUsedHidingComparer());
