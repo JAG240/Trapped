@@ -10,12 +10,32 @@ public class Interact : MonoBehaviour
     private LayerMask interactMask;
     private LayerMask peekMask;
     private PlayerInventory playerInventory;
+    private UIManager uiManager;
 
     private void Start()
     {
         interactMask = LayerMask.GetMask("Interactable", "Bottle");
         peekMask = LayerMask.GetMask("Peekable");
         playerInventory = GetComponent<PlayerInventory>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+    }
+
+    private void FixedUpdate()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.transform.position, Camera.main.transform.forward, 3, interactMask);
+
+        if (hits.Length <= 0)
+        {
+            uiManager.SetCrossHairColor(false);
+            return;
+        }
+
+        GameObject obj = hits[0].transform.gameObject;
+
+        if (obj.GetComponent<PlaceableArea>() != null || obj.GetComponent<IInteractable>() != null || obj.transform.parent.GetComponent<IInteractable>() != null)
+            uiManager.SetCrossHairColor(true);
+        else
+            uiManager.SetCrossHairColor(false);
     }
 
     private void OnInteract()

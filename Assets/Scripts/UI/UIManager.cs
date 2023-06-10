@@ -5,11 +5,16 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private VisualTreeAsset crossHair;
     [SerializeField] private VisualTreeAsset mainMenu;
     [SerializeField] private VisualTreeAsset respawnMenu;
     [SerializeField] private VisualTreeAsset note;
     private SceneManager sceneManager;
     private UIDocument uiDoc;
+    private Color crossHairDefaultColor = new Color(210f/255f, 210f/255f, 210f/255f, 100f/255f);
+    private Color crossHairInteractColor = new Color(255f/255f, 63f/255f, 0f, 100f/255f);
+    private bool canInteract = false;
+    private Label crossHairText;
 
     private Button playGame;
     private Button settings;
@@ -20,11 +25,30 @@ public class UIManager : MonoBehaviour
     {
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         uiDoc = GetComponent<UIDocument>();
+        sceneManager.playerDeath += (context) => LoadRespawnMenu();
 
         if (sceneManager.startIntro)
+        {
             LoadMainMenu();
+            return;
+        }
 
-        sceneManager.playerDeath += (context) => LoadRespawnMenu();
+        LoadCrossHair();
+    }
+
+    public void LoadCrossHair()
+    {
+        var root = uiDoc.rootVisualElement;
+        crossHairText = root.Q<Label>("CrossHair");
+    }
+
+    public void SetCrossHairColor(bool canInteract)
+    {
+        if (canInteract == this.canInteract)
+            return;
+
+        crossHairText.style.color = canInteract ? crossHairInteractColor : crossHairDefaultColor;
+        this.canInteract = canInteract;
     }
 
     public void LoadNote(string noteText, float textSize)
@@ -49,7 +73,8 @@ public class UIManager : MonoBehaviour
         Button close = root.Q<Button>("Close");
         close.clicked -= CloseNote;
 
-        uiDoc.visualTreeAsset = null;
+        uiDoc.visualTreeAsset = crossHair;
+        LoadCrossHair();
         sceneManager.CloseNote();
     }
 
@@ -78,7 +103,8 @@ public class UIManager : MonoBehaviour
         playGame.clicked -= StartGame;
         quitGame.clicked -= Application.Quit;
 
-        uiDoc.visualTreeAsset = null;
+        uiDoc.visualTreeAsset = crossHair;
+        LoadCrossHair();
 
         sceneManager.StartGame();
     }
@@ -102,7 +128,8 @@ public class UIManager : MonoBehaviour
         respawn = root.Q<Button>("respawn");
         respawn.clicked -= Respawn;
 
-        uiDoc.visualTreeAsset = null;
+        uiDoc.visualTreeAsset = crossHair;
+        LoadCrossHair();
         sceneManager.ResetLevel();
     }
 }
