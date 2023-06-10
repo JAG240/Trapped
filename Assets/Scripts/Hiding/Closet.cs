@@ -27,13 +27,25 @@ public class Closet : Hiding, IInteractable, IPeekable
         doors[1] = transform.Find("Door_R").gameObject;
         hiding = GetComponent<Hiding>();
         audioSource = GetComponent<AudioSource>();
+        GameObject.Find("SceneManager").GetComponent<SceneManager>().resetLevel += ResetState;
+    }
+
+    private void ResetState()
+    {
+        if (!open)
+            return;
+
+        open = false;
+        OpenDoors(false);
     }
 
     public void Interact(GameObject player)
     {
+        //This is terrible and you should be ashamed Gonos
         StarterAssetsInputs inputs = player.GetComponentInChildren<StarterAssetsInputs>();
         FirstPersonController inputController = player.GetComponentInChildren<FirstPersonController>();
         CharacterController charController = player.GetComponentInChildren<CharacterController>();
+        PlayerAudio playerAudio = player.GetComponentInParent<PlayerAudio>();
         Transform playerCapsule = inputs.transform;
 
         if (!open)
@@ -41,10 +53,12 @@ public class Closet : Hiding, IInteractable, IPeekable
             open = true;
 
             charController.enabled = false;
+
             inputs.movementDisabled = true;
             inputs.cameraMovementDisabled = true;
             inputs.StopMovement();
             playerCapsule.transform.position = transform.position + characterOffset;
+            playerAudio.enabled = false;
 
             audioSource.clip = playerInteract;
             audioSource.Play();
@@ -58,6 +72,7 @@ public class Closet : Hiding, IInteractable, IPeekable
 
         charController.enabled = false;
         playerCapsule.transform.position = transform.position + characterOffset + (-transform.right * 2);
+        playerAudio.enabled = true;
 
         audioSource.Play();
 
@@ -86,6 +101,11 @@ public class Closet : Hiding, IInteractable, IPeekable
             audioSource.clip = close;
             audioSource.Play();
         }
+    }
+
+    public bool HasPlayer()
+    {
+        return open;
     }
 
     public void Peek(GameObject obj, bool state)

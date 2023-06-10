@@ -30,6 +30,9 @@ public class Investigate : KillerBaseState
 
         Manager.playerLastSeen = Vector3.zero;
         Manager.agent.speed = Manager.walkSpeed;
+
+        checkHiding = null;
+        checking = false;
     }
 
     public override void UpdateState(KillerStateManager Manager)
@@ -46,7 +49,7 @@ public class Investigate : KillerBaseState
         if(Manager.noisyRoom && !checking)
             CheckHiding(Manager);
 
-        if (Manager.noisyRoom == null)
+        if (Manager.noisyRoom == null && Manager.currentState==this)
             Manager.SwitchState(Manager.DoTasks);
     }
 
@@ -60,6 +63,7 @@ public class Investigate : KillerBaseState
             checking = true;
             Manager.lookAt(checkHiding.transform.position);
             Manager.StartCoroutine(PlayCheckAnim(Manager));
+            return;
         }
 
         Hiding hidingSpot = Manager.noisyRoom.GetRandomHiding();
@@ -75,8 +79,14 @@ public class Investigate : KillerBaseState
         if (closet)
             closet.OpenDoors(true);
 
+        if (closet.HasPlayer())
+            Manager.SwitchState(Manager.Kill);
+
         yield return new WaitForSeconds(1.5f);
         Manager.killerAnimator.SetCheck(false);
+
+        if (closet.HasPlayer())
+            yield break;
 
         if (closet)
             closet.OpenDoors(false);

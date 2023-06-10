@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private VisualTreeAsset mainMenu;
     [SerializeField] private VisualTreeAsset respawnMenu;
+    [SerializeField] private VisualTreeAsset note;
     private SceneManager sceneManager;
     private UIDocument uiDoc;
 
@@ -24,6 +25,32 @@ public class UIManager : MonoBehaviour
             LoadMainMenu();
 
         sceneManager.playerDeath += (context) => LoadRespawnMenu();
+    }
+
+    public void LoadNote(string noteText, float textSize)
+    {
+        uiDoc.visualTreeAsset = note;
+        sceneManager.ReadNote();
+
+        var root = uiDoc.rootVisualElement;
+
+        Button close = root.Q<Button>("Close");
+        Label textField = root.Q<Label>("Text");
+
+        textField.text = noteText;
+        textField.style.fontSize = textSize;
+
+        close.clicked += CloseNote;
+    }
+
+    private void CloseNote()
+    {
+        var root = uiDoc.rootVisualElement;
+        Button close = root.Q<Button>("Close");
+        close.clicked -= CloseNote;
+
+        uiDoc.visualTreeAsset = null;
+        sceneManager.CloseNote();
     }
 
     private void LoadMainMenu()
@@ -70,6 +97,11 @@ public class UIManager : MonoBehaviour
 
     private void Respawn()
     {
+        var root = uiDoc.rootVisualElement;
+
+        respawn = root.Q<Button>("respawn");
+        respawn.clicked -= Respawn;
+
         uiDoc.visualTreeAsset = null;
         sceneManager.ResetLevel();
     }

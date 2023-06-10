@@ -8,8 +8,16 @@ public class PuzzleButton : MonoBehaviour, IInteractable
     [SerializeField] private GameObject button;
     [SerializeField] private float pressSpeed = 1f;
     [SerializeField] private float pressDepth = -0.03f;
+    [SerializeField] private AudioClip success;
+    [SerializeField] private AudioClip fail;
     public Action submit;
     private bool isPressing = false;
+    private AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void IInteractable.Interact(GameObject player)
     {
@@ -36,6 +44,20 @@ public class PuzzleButton : MonoBehaviour, IInteractable
 
         if(end != 0)
             submit?.Invoke();
+    }
+
+    public void PlayAudio(bool isSuccess)
+    {
+        if (isSuccess)
+        {
+            audioSource.clip = success;
+            audioSource.Play();
+        }
+        else
+        {
+            audioSource.clip = fail;
+            audioSource.Play();
+        }
     }
 
     public void ReleaseButton()

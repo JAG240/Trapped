@@ -39,6 +39,9 @@ namespace StarterAssets
 			sceneManager.enterCar += EnterCar;
 			sceneManager.exitCar += ExitCar;
 
+			sceneManager.readNote += ReadNote;
+			sceneManager.exitNote += CloseNote;
+
 			sceneManager.playerDeath += Die;
 			sceneManager.resetLevel += ResetLevel;
         }
@@ -131,6 +134,20 @@ namespace StarterAssets
 			firstPersonController.SnapLookAt(car.GetLookPosition());
 		}
 
+		private void ReadNote()
+        {
+			firstPersonController.allowMovement = false;
+			characterController.enabled = false;
+			movementDisabled = true;
+			cameraMovementDisabled = true;
+
+			StopMovement();
+
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			cursorLocked = false;
+		}
+
 		private void ExitCar(Car car)
         {
 			transform.root.position = car.GetExitPosition();
@@ -142,6 +159,18 @@ namespace StarterAssets
 			Cursor.visible = false;
 			cursorLocked = false;
 
+			cameraMovementDisabled = false;
+		}
+
+		private void CloseNote()
+        {
+			characterController.enabled = true;
+			firstPersonController.allowMovement = true;
+			movementDisabled = false;
+
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+			cursorLocked = false;
 			cameraMovementDisabled = false;
 		}
 

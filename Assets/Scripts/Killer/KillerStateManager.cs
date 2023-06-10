@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class KillerStateManager : MonoBehaviour
 {
-    private KillerBaseState currentState;
+    public KillerBaseState currentState { get; private set; }
     public KillerBaseState DoTasks { get; private set; } = new DoTasks();
     public KillerBaseState Chase { get; private set; } = new Chase();
     public KillerBaseState Investigate { get; private set; } = new Investigate();

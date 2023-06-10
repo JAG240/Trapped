@@ -22,6 +22,9 @@ public class SceneManager : MonoBehaviour
 
     public Action introKill;
 
+    public Action readNote;
+    public Action exitNote;
+
     void Start()
     {
         car = GameObject.Find("Car").GetComponent<Car>();
@@ -71,5 +74,15 @@ public class SceneManager : MonoBehaviour
     public void ExitCar(Car car)
     {
         exitCar?.Invoke(car);
+    }
+
+    public void ReadNote()
+    {
+        readNote?.Invoke();
+    }
+
+    public void CloseNote()
+    {
+        exitNote?.Invoke();
     }
 }
