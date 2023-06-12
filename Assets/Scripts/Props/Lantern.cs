@@ -2,13 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lantern : Task
+public class Lantern : Task, IInteractable
 {
     new private Light light;
-    [SerializeField] private float minIntensity = 0.1f;
-    [SerializeField] private float maxIntensity = 0.5f;
+    [SerializeField] private float minIntensity = 0.6f;
+    [SerializeField] private float maxIntensity = 1f;
     [SerializeField] private float minFlickerTime = 0.1f;
     [SerializeField] private float maxFlickerTime = 0.5f;
+    [field: SerializeField] public bool lit { get; private set; } = true;
+    [SerializeField] private Material litMat;
+    [SerializeField] private Material unlitMat;
+    [SerializeField] private bool canInteract = true;
+    private float currentMinIntensity;
+    private float currentMaxIntensity;
+    private MeshRenderer lightMat;
+    private MeshCollider meshCollider;
+    protected AudioSource audioSource;
 
     protected override void Start()
     {
@@ -16,6 +25,15 @@ public class Lantern : Task
 
         light = GetComponentInChildren<Light>();
         StartCoroutine(Flicker());
+
+        lightMat = GetComponent<MeshRenderer>();
+        meshCollider = GetComponent<MeshCollider>();
+        audioSource = GetComponent<AudioSource>();
+
+        meshCollider.enabled = canInteract;
+        currentMaxIntensity = lit ? maxIntensity : 0;
+        currentMinIntensity = lit ? minIntensity : 0;
+        ChangeLanternMat();
     }
 
     override public Vector3 GetTaskPosition()
@@ -36,7 +54,7 @@ public class Lantern : Task
             if(!inFlicker)
             {
                 inFlicker = true;
-                intensity = Random.Range(minIntensity, maxIntensity);
+                intensity = Random.Range(currentMinIntensity, currentMaxIntensity);
                 flickerTime = Random.Range(minFlickerTime, maxFlickerTime);
                 totalTime = 0f;
                 currentLight = light.intensity;
@@ -55,5 +73,28 @@ public class Lantern : Task
 
             yield return null;
         }
+    }
+
+    public void Interact(GameObject player)
+    {
+        lit = !lit;
+
+        currentMaxIntensity = lit ? maxIntensity : 0;
+        currentMinIntensity = lit ? minIntensity : 0;
+        ChangeLanternMat();
+        audioSource.Play();
+    }
+
+    private void ChangeLanternMat()
+    {
+        Material[] mats = lightMat.materials;
+        mats[3] = lit ? litMat : unlitMat;
+        lightMat.materials = mats;
+    }
+
+    public void UpdateInteractable(bool state)
+    {
+        canInteract = state;
+        meshCollider.enabled = canInteract;
     }
 }
