@@ -12,7 +12,7 @@ public class Lantern : Task, IInteractable
     [field: SerializeField] public bool lit { get; protected set; } = true;
     [SerializeField] private Material litMat;
     [SerializeField] private Material unlitMat;
-    [SerializeField] private bool canInteract = true;
+    [field: SerializeField] public bool canInteract { get; private set; } = true;
     protected float currentMinIntensity;
     protected float currentMaxIntensity;
     private MeshRenderer lightMat;

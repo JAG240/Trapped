@@ -31,6 +31,8 @@ public class Investigate : KillerBaseState
         Manager.playerLastSeen = Vector3.zero;
         Manager.agent.speed = Manager.walkSpeed;
 
+        Manager.StopAllCoroutines();
+
         checkHiding = null;
         checking = false;
     }

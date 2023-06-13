@@ -8,6 +8,7 @@ public class Room : MonoBehaviour
     private List<Task> taskList = new List<Task>();
     private List<ChopTable> chopTables = new List<ChopTable>();
     private List<Hiding> hidingList = new List<Hiding>();
+    private List<Lantern> lanterns = new List<Lantern>();
     private bool registered = false;
 
     [field: SerializeField] public bool agentAccessible { get; private set; } = false;
@@ -48,6 +49,15 @@ public class Room : MonoBehaviour
             else
                 Debug.LogError($"{table.name} already added to chop table");
         }
+        else if(item as Lantern)
+        {
+            Lantern lantern = item as Lantern;
+
+            if (!lanterns.Contains(lantern))
+                lanterns.Add(lantern);
+            else
+                Debug.LogError($"{lantern.name} already added to task list");
+        }
         else if(item as Task)
         {
             Task task = item as Task;
@@ -75,6 +85,36 @@ public class Room : MonoBehaviour
             else
                 Debug.LogError($"{door} already added to door list");
         }
+    }
+
+    public bool RoomIsLit()
+    {
+        foreach(Lantern lantern in lanterns)
+        {
+            if (lantern.lit)
+                return true;
+        }
+
+        return false;
+    }
+
+    public Lantern GetClosestLantern(Vector3 killerPos)
+    {
+        float closest = float.MaxValue;
+        Lantern bestLantern = null;
+
+        foreach(Lantern lantern in lanterns)
+        {
+            float distance = Vector3.Distance(killerPos, lantern.GetTaskPosition());
+
+            if(distance < closest && lantern.canInteract)
+            {
+                closest = distance;
+                bestLantern = lantern;
+            }
+        }
+
+        return bestLantern;
     }
 
     public Task GetTask()

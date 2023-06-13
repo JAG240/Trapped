@@ -32,6 +32,11 @@ public class KillerAnimator : MonoBehaviour
         animator.SetBool("OpenCloset", state);
     }
 
+    public void SetFlick(bool state)
+    {
+        animator.SetBool("Flick", state);
+    }
+
     public float GetAnimationLength()
     {
         return animator.GetCurrentAnimatorStateInfo(0).length;

@@ -6,11 +6,13 @@ using UnityEngine.AI;
 public class KillerStateManager : MonoBehaviour
 {
     public KillerBaseState currentState { get; private set; }
+    public KillerBaseState previousState { get; private set; }
     public KillerBaseState DoTasks { get; private set; } = new DoTasks();
     public KillerBaseState Chase { get; private set; } = new Chase();
     public KillerBaseState Investigate { get; private set; } = new Investigate();
     public KillerBaseState Kill { get; private set; } = new Kill();
     public KillerBaseState Idle { get; private set; } = new Idle();
+    public KillerBaseState LightRoom { get; private set; } = new LightRoom();
 
     public NavMeshAgent agent;
     public Vector3 playerLastSeen = Vector3.zero;
@@ -21,6 +23,7 @@ public class KillerStateManager : MonoBehaviour
     [SerializeField] public float killerReach;
 
     public RoomManager roomManager { get; private set; }
+    public Room currentRoom { get; private set; }
     public Detection detection { get; private set; }
     public Transform player { get; private set; }
     public KillerAnimator killerAnimator { get; private set; }
@@ -61,9 +64,50 @@ public class KillerStateManager : MonoBehaviour
 
     public void SwitchState(KillerBaseState newState)
     {
+        if (newState == currentState)
+            return;
+
+        Room keepNoisyRoom = null;
+        Transform keepNoise = null;
+
+        if(currentState == Investigate && newState == LightRoom)
+        {
+            keepNoisyRoom = noisyRoom;
+            keepNoise = noise;
+        }
+
         currentState.ExitState(this);
+        previousState = GetCurrentState();
         currentState = newState;
         currentState.EnterState(this);
+
+        if(keepNoise && keepNoisyRoom)
+        {
+            noisyRoom = keepNoisyRoom;
+            noise = keepNoise;
+        }
+    }
+
+    private KillerBaseState GetCurrentState()
+    {
+        switch (currentState)
+        {
+            case Kill kill:
+                return Kill;
+            case DoTasks doTasks:
+                return DoTasks;
+            case Chase chase:
+                return Chase;
+            case Investigate investigate:
+                return Investigate;
+            case LightRoom lightRoom:
+                return LightRoom;
+            case Idle idle:
+                return Idle;
+            default:
+                return null;
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -71,6 +115,14 @@ public class KillerStateManager : MonoBehaviour
         if(other.transform.tag == "Door")
         {
             other.transform.parent.GetComponent<Door>().OpenDoor();
+        }
+
+        if(other.name == "Room")
+        {
+            currentRoom = other.GetComponent<Room>();
+
+            if (!currentRoom.RoomIsLit())
+                SwitchState(LightRoom);
         }
     }
 
