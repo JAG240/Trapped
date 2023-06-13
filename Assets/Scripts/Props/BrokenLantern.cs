@@ -8,4 +8,14 @@ public class BrokenLantern : Lantern, IInteractable
     {
         audioSource.Play();
     }
+
+    public void KillerInteract()
+    {
+        lit = !lit;
+
+        currentMaxIntensity = lit ? maxIntensity : 0;
+        currentMinIntensity = lit ? minIntensity : 0;
+        ChangeLanternMat();
+        audioSource.Play();
+    }
 }

@@ -5,16 +5,16 @@ using UnityEngine;
 public class Lantern : Task, IInteractable
 {
     new private Light light;
-    [SerializeField] private float minIntensity = 0.6f;
-    [SerializeField] private float maxIntensity = 1f;
+    [SerializeField] protected float minIntensity = 0.6f;
+    [SerializeField] protected float maxIntensity = 1f;
     [SerializeField] private float minFlickerTime = 0.1f;
     [SerializeField] private float maxFlickerTime = 0.5f;
-    [field: SerializeField] public bool lit { get; private set; } = true;
+    [field: SerializeField] public bool lit { get; protected set; } = true;
     [SerializeField] private Material litMat;
     [SerializeField] private Material unlitMat;
     [SerializeField] private bool canInteract = true;
-    private float currentMinIntensity;
-    private float currentMaxIntensity;
+    protected float currentMinIntensity;
+    protected float currentMaxIntensity;
     private MeshRenderer lightMat;
     private MeshCollider meshCollider;
     protected AudioSource audioSource;
@@ -85,7 +85,7 @@ public class Lantern : Task, IInteractable
         audioSource.Play();
     }
 
-    private void ChangeLanternMat()
+    protected void ChangeLanternMat()
     {
         Material[] mats = lightMat.materials;
         mats[3] = lit ? litMat : unlitMat;

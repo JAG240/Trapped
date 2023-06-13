@@ -45,7 +45,12 @@ public class PuzzleManager : MonoBehaviour
             if (lantern.handle.lowered)
                 lantern.handle.Interact(null);
 
-
+            if(lantern.solvedState != lantern.lantern.lit)
+            {
+                lanternsButton.PlayAudio(false);
+                lanternsButton.ReleaseButton();
+                return;
+            }
         }
 
         lanternsButton.PlayAudio(true);

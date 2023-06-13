@@ -12,6 +12,7 @@ public class PuzzleButton : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip fail;
     public Action submit;
     private bool isPressing = false;
+    private bool isPressed = false;
     private AudioSource audioSource;
 
     private void Start()
@@ -21,7 +22,7 @@ public class PuzzleButton : MonoBehaviour, IInteractable
 
     void IInteractable.Interact(GameObject player)
     {
-        if(!isPressing)
+        if(!isPressing && !isPressed)
             StartCoroutine(pressButton(0f, pressDepth));
     }
 
@@ -43,7 +44,14 @@ public class PuzzleButton : MonoBehaviour, IInteractable
         isPressing = false;
 
         if(end != 0)
+        {
             submit?.Invoke();
+            isPressed = true;
+        }
+        else
+        {
+            isPressed = false;
+        }
     }
 
     public void PlayAudio(bool isSuccess)
@@ -62,7 +70,9 @@ public class PuzzleButton : MonoBehaviour, IInteractable
 
     public void ReleaseButton()
     {
-        if (!isPressing)
-            StartCoroutine(pressButton(pressDepth, 0f));
+        if (isPressing)
+            return;
+
+        StartCoroutine(pressButton(pressDepth, 0f));
     }
 }
