@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Note : MonoBehaviour, IInteractable
 {
-    [SerializeField] private string text;
+    [SerializeField][TextArea] private string text;
     [SerializeField] private float textSize;
     private UIManager uiManager;
 

@@ -30,6 +30,9 @@ namespace StarterAssets
 		private FirstPersonController firstPersonController;
 		[SerializeField] private Transform virtualCam;
 
+		private bool reading = false;
+		private bool paused = false;
+
         private void Start()
         {
 			sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
@@ -44,6 +47,9 @@ namespace StarterAssets
 
 			sceneManager.playerDeath += Die;
 			sceneManager.resetLevel += ResetLevel;
+
+			sceneManager.pauseGame += PauseGame;
+			sceneManager.resumeGame += ResumeGame;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -63,11 +69,16 @@ namespace StarterAssets
 			}
 		}
 
-		public void OnJump(InputValue value)
-		{
-			//disabled jump
-			//JumpInput(value.isPressed);
-		}
+		public void OnEscape()
+        {
+			if (reading)
+				sceneManager.CloseNote();
+			else if (paused)
+				sceneManager.ResumeGame();
+			else
+				sceneManager.PauseGame();
+
+        }
 
 		public void OnSprint(InputValue value)
 		{
@@ -76,8 +87,6 @@ namespace StarterAssets
 
 		public void OnCrouch(InputValue value)
 		{
-			//1 for crouch pressed 0 for crouch released
-
 			firstPersonController.SetCrouch(value.Get<float>() == 1);
 		}
 #endif
@@ -121,20 +130,19 @@ namespace StarterAssets
 
 		private void EnterCar(Car car)
         {
-			firstPersonController.allowMovement = false;
-			characterController.enabled = false;
-			movementDisabled = true;
-			cameraMovementDisabled = true;
-
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
-			cursorLocked = false;
-
+			DisableCamera();
 			transform.root.position = car.GetSeatPosition();
 			firstPersonController.SnapLookAt(car.GetLookPosition());
 		}
 
-		private void ReadNote()
+		private void ExitCar(Car car)
+		{
+			transform.root.position = car.GetExitPosition();
+			EnableCamera();
+			cameraMovementDisabled = false;
+		}
+
+		private void DisableCamera()
         {
 			firstPersonController.allowMovement = false;
 			characterController.enabled = false;
@@ -148,9 +156,8 @@ namespace StarterAssets
 			cursorLocked = false;
 		}
 
-		private void ExitCar(Car car)
+		private void EnableCamera()
         {
-			transform.root.position = car.GetExitPosition();
 			characterController.enabled = true;
 			firstPersonController.allowMovement = true;
 			movementDisabled = false;
@@ -158,46 +165,43 @@ namespace StarterAssets
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 			cursorLocked = false;
-
 			cameraMovementDisabled = false;
+		}
+
+		private void PauseGame()
+        {
+			DisableCamera();
+			paused = true;
+        }
+
+		private void ResumeGame()
+        {
+			EnableCamera();
+			paused = false;
+        }
+
+		private void ReadNote()
+		{
+			DisableCamera();
+			reading = true;
 		}
 
 		private void CloseNote()
         {
-			characterController.enabled = true;
-			firstPersonController.allowMovement = true;
-			movementDisabled = false;
-
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-			cursorLocked = false;
-			cameraMovementDisabled = false;
+			EnableCamera();
+			reading = false;
 		}
 
 		private void Die(KillerStateManager killer)
         {
-			move = Vector2.zero;
-			look = Vector2.zero;
-
-			firstPersonController.allowMovement = false;
-			characterController.enabled = false;
-			movementDisabled = true;
-			cameraMovementDisabled = true;
-			SetCursorState(false);
-
+			DisableCamera();
 			firstPersonController.LookAt(killer.transform.position);
         }
 
         private void ResetLevel()
         {
 			transform.position = sceneManager.playerRespawnPoint;
-
-			firstPersonController.allowMovement = true;
-			movementDisabled = false;
-			cameraMovementDisabled = false;
-			SetCursorState(true);
-			characterController.enabled = true;
-
+			EnableCamera();
 			firstPersonController.LookAt(Vector3.right);
 		}
     }

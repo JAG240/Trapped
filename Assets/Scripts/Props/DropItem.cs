@@ -13,7 +13,7 @@ public class DropItem : MonoBehaviour, IChopInteraction
         if (dropped)
             return;
 
-        Instantiate(droppedObject, dropPos);
+        Instantiate(droppedObject, dropPos.position, dropPos.rotation, null);
         dropped = true;
     }
 }

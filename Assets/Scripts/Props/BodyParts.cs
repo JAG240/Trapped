@@ -6,10 +6,14 @@ public class BodyParts : MonoBehaviour, IInteractable
 {
     private IChopInteraction[] chopReactions = new IChopInteraction[0];
 
+    private void Start()
+    {
+        chopReactions = GetComponents<IChopInteraction>();
+    }
+
     public void Interact(GameObject player)
     {
         player.GetComponent<PlayerInventory>().PutInHands(gameObject, true);
-        chopReactions = GetComponents<IChopInteraction>();
     }
 
     public void GetChopped(PlaceableArea area)

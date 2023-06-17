@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VisualTreeAsset mainMenu;
     [SerializeField] private VisualTreeAsset respawnMenu;
     [SerializeField] private VisualTreeAsset note;
+    [SerializeField] private VisualTreeAsset pauseMenu;
+
     private SceneManager sceneManager;
     private UIDocument uiDoc;
     private Color crossHairDefaultColor = new Color(210f/255f, 210f/255f, 210f/255f, 100f/255f);
@@ -26,6 +28,9 @@ public class UIManager : MonoBehaviour
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         uiDoc = GetComponent<UIDocument>();
         sceneManager.playerDeath += (context) => LoadRespawnMenu();
+        sceneManager.pauseGame += LoadPauseMenu;
+        sceneManager.resumeGame += Resume;
+        sceneManager.exitNote += CloseNote;
 
         if (sceneManager.startIntro)
         {
@@ -64,18 +69,17 @@ public class UIManager : MonoBehaviour
         textField.text = noteText;
         textField.style.fontSize = textSize;
 
-        close.clicked += CloseNote;
+        close.clicked += sceneManager.CloseNote;
     }
 
     private void CloseNote()
     {
         var root = uiDoc.rootVisualElement;
         Button close = root.Q<Button>("Close");
-        close.clicked -= CloseNote;
+        close.clicked -= sceneManager.CloseNote;
 
         uiDoc.visualTreeAsset = crossHair;
         LoadCrossHair();
-        sceneManager.CloseNote();
     }
 
     private void LoadMainMenu()
@@ -109,6 +113,27 @@ public class UIManager : MonoBehaviour
         sceneManager.StartGame();
     }
 
+    public void LoadPauseMenu()
+    {
+        uiDoc.visualTreeAsset = pauseMenu;
+
+        var root = uiDoc.rootVisualElement;
+
+        Button resume = root.Q<Button>("resume");
+
+        resume.clicked += sceneManager.ResumeGame;
+    }
+
+    public void Resume()
+    {
+        var root = uiDoc.rootVisualElement;
+
+        Button resume = root.Q<Button>("resume");
+
+        resume.clicked -= sceneManager.ResumeGame;
+
+        uiDoc.visualTreeAsset = crossHair;
+    }
 
     public void LoadRespawnMenu()
     {

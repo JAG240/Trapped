@@ -13,6 +13,8 @@ public class SceneManager : MonoBehaviour
     private Car car;
     private StreetBuilder streetBuilder;
     private GameObject player;
+    private bool mainMenu = false;
+    private bool paused = false;
 
     public Action<KillerStateManager> playerDeath;
     public Action resetLevel;
@@ -25,6 +27,9 @@ public class SceneManager : MonoBehaviour
     public Action readNote;
     public Action exitNote;
 
+    public Action pauseGame;
+    public Action resumeGame;
+
     void Start()
     {
         car = GameObject.Find("Car").GetComponent<Car>();
@@ -33,6 +38,7 @@ public class SceneManager : MonoBehaviour
 
         if(startIntro)
         {
+            mainMenu = true;
             player.GetComponent<PlayerAudio>().StartIntroMusic();
             car.EnterCar();
         }
@@ -40,6 +46,7 @@ public class SceneManager : MonoBehaviour
 
     public void StartGame()
     {
+        mainMenu = false;
         StartCoroutine(streetBuilder.StopMovement());
         StartCoroutine(StallCar());
     }
@@ -84,5 +91,23 @@ public class SceneManager : MonoBehaviour
     public void CloseNote()
     {
         exitNote?.Invoke();
+    }
+
+    public void PauseGame()
+    {
+        if (mainMenu || paused)
+            return;
+
+        paused = true;
+        pauseGame?.Invoke();
+    }
+
+    public void ResumeGame()
+    {
+        if (!paused)
+            return;
+
+        paused = false;
+        resumeGame?.Invoke();
     }
 }
