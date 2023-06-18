@@ -30,6 +30,8 @@ public class SceneManager : MonoBehaviour
     public Action pauseGame;
     public Action resumeGame;
 
+    public Action playerPrefsUpdated;
+
     void Start()
     {
         car = GameObject.Find("Car").GetComponent<Car>();
@@ -109,5 +111,10 @@ public class SceneManager : MonoBehaviour
 
         paused = false;
         resumeGame?.Invoke();
+    }
+
+    public void UpdatePlayerPrefs()
+    {
+        playerPrefsUpdated?.Invoke();
     }
 }

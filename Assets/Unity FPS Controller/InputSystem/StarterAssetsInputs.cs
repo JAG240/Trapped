@@ -50,6 +50,8 @@ namespace StarterAssets
 
 			sceneManager.pauseGame += PauseGame;
 			sceneManager.resumeGame += ResumeGame;
+
+			sceneManager.playerPrefsUpdated += firstPersonController.LoadPlayerPref;
         }
 
 #if ENABLE_INPUT_SYSTEM

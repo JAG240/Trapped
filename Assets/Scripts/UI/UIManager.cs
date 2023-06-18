@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VisualTreeAsset respawnMenu;
     [SerializeField] private VisualTreeAsset note;
     [SerializeField] private VisualTreeAsset pauseMenu;
+    [SerializeField] private VisualTreeAsset settingsMenu;
 
     private SceneManager sceneManager;
     private UIDocument uiDoc;
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
     private Color crossHairInteractColor = new Color(255f/255f, 63f/255f, 0f, 100f/255f);
     private bool canInteract = false;
     private Label crossHairText;
+    private bool wasPaused = false;
 
     private Button playGame;
     private Button settings;
@@ -93,10 +95,21 @@ public class UIManager : MonoBehaviour
         quitGame = root.Q<Button>("quit");
 
         playGame.clicked += StartGame;
+        settings.clicked += LoadSettings;
         quitGame.clicked += Application.Quit;
     }
 
     private void StartGame()
+    {
+        UnloadMainMenu();
+
+        uiDoc.visualTreeAsset = crossHair;
+        LoadCrossHair();
+
+        sceneManager.StartGame();
+    }
+
+    private void UnloadMainMenu()
     {
         var root = uiDoc.rootVisualElement;
 
@@ -105,12 +118,56 @@ public class UIManager : MonoBehaviour
         quitGame = root.Q<Button>("quit");
 
         playGame.clicked -= StartGame;
+        settings.clicked -= LoadSettings;
         quitGame.clicked -= Application.Quit;
+    }
 
-        uiDoc.visualTreeAsset = crossHair;
-        LoadCrossHair();
+    private void LoadSettings()
+    {
+        if (uiDoc.visualTreeAsset == mainMenu)
+        {
+            UnloadMainMenu();
+            wasPaused = false;
+        }
+        else
+        {
+            UnloadPauseMenu();
+            wasPaused = true;
+        }
 
-        sceneManager.StartGame();
+        uiDoc.visualTreeAsset = settingsMenu;
+
+        var root = uiDoc.rootVisualElement;
+
+        Slider camSens = root.Q<Slider>("camsens");
+        Button save = root.Q<Button>("save");
+
+        camSens.value = PlayerPrefs.GetFloat("cam_sens");
+
+        camSens.RegisterValueChangedCallback(UpdateCameraSens);
+        save.clicked += UnloadSettings;
+    }
+
+    public void UpdateCameraSens(ChangeEvent<float> newSens)
+    {
+        PlayerPrefs.SetFloat("cam_sens", newSens.newValue);
+        sceneManager.UpdatePlayerPrefs();
+    }
+
+    private void UnloadSettings()
+    {
+        var root = uiDoc.rootVisualElement;
+
+        Slider camSens = root.Q<Slider>("camsens");
+        Button save = root.Q<Button>("save");
+
+        camSens.UnregisterValueChangedCallback(UpdateCameraSens);
+        save.clicked += UnloadSettings;
+
+        if (wasPaused)
+            LoadPauseMenu();
+        else
+            LoadMainMenu();
     }
 
     public void LoadPauseMenu()
@@ -120,18 +177,26 @@ public class UIManager : MonoBehaviour
         var root = uiDoc.rootVisualElement;
 
         Button resume = root.Q<Button>("resume");
+        Button settings = root.Q<Button>("settings");
 
         resume.clicked += sceneManager.ResumeGame;
+        settings.clicked += LoadSettings;
     }
 
-    public void Resume()
+    private void UnloadPauseMenu()
     {
         var root = uiDoc.rootVisualElement;
 
         Button resume = root.Q<Button>("resume");
+        Button settings = root.Q<Button>("settings");
 
         resume.clicked -= sceneManager.ResumeGame;
+        settings.clicked -= LoadSettings;
+    }
 
+    public void Resume()
+    {
+        UnloadPauseMenu();
         uiDoc.visualTreeAsset = crossHair;
     }
 
