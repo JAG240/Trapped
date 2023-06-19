@@ -29,16 +29,19 @@ namespace StarterAssets
 		private SceneManager sceneManager;
 		private CharacterController characterController;
 		private FirstPersonController firstPersonController;
+		private PlayerAudio playerAudio;
 		[SerializeField] private Transform virtualCam;
 
 		private bool reading = false;
 		private bool paused = false;
+		public bool isHiding = false;
 
         private void Start()
         {
 			sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
 			characterController = GetComponent<CharacterController>();
 			firstPersonController = GetComponent<FirstPersonController>();
+			playerAudio = GetComponentInParent<PlayerAudio>();
 
 			sceneManager.enterCar += EnterCar;
 			sceneManager.exitCar += ExitCar;
@@ -179,7 +182,17 @@ namespace StarterAssets
 
 		private void ResumeGame()
         {
-			EnableCamera();
+			if(!isHiding)
+            {
+				EnableCamera();
+            }
+			else
+            {
+				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
+				cursorLocked = false;
+			}
+
 			paused = false;
         }
 
@@ -198,6 +211,8 @@ namespace StarterAssets
 		private void Die(KillerStateManager killer)
         {
 			DisableCamera();
+			StopMovement();
+			playerAudio.enabled = false;
 			firstPersonController.LookAt(killer.transform.position);
         }
 
@@ -213,6 +228,7 @@ namespace StarterAssets
         {
 			yield return new WaitForSeconds(1.5f);
 			EnableCamera();
+			playerAudio.enabled = true;
         }
     }
 	

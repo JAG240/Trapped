@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,28 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip introSigh;
 
     [Header("Footstep Settings")]
-    [SerializeField] private List<AudioClip> dirtyGroundFootsteps = new List<AudioClip>();
     [SerializeField] private float walkingSpeed;
     [SerializeField] private float runningSpeed;
+    [SerializeField] private float walkingCooldown;
+    [SerializeField] private float runningCooldown;
+
+    [Header("Concert")]
+    [SerializeField] private List<AudioClip> dirtyGroundFootsteps = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> dirtyGroundFootstepsRunning = new List<AudioClip>();
+
+    [Header("Wood")]
+    [SerializeField] private List<AudioClip> woodenGroundFootsteps = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> woodenGroundFootstepsRunning = new List<AudioClip>();
 
     private CharacterController characterController;
+    private float lastAudioClip = 0;
+    public footstepSource source = footstepSource.concrete;
+
+    [Serializable]
+    public enum footstepSource
+    {
+        concrete, wood
+    }
 
     void Start()
     {
@@ -26,16 +44,24 @@ public class PlayerAudio : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (characterController.velocity.magnitude > runningSpeed && !soundFXAudioSource.isPlaying)
+        lastAudioClip += Time.deltaTime;
+
+        if (characterController.velocity.magnitude > runningSpeed && !soundFXAudioSource.isPlaying && lastAudioClip >= walkingCooldown)
         {
+            List<AudioClip> audioSources = source == footstepSource.wood ? woodenGroundFootsteps : dirtyGroundFootsteps;
+
+            lastAudioClip = 0f;
             soundFXAudioSource.pitch = 1.4f;
-            soundFXAudioSource.clip = dirtyGroundFootsteps[Random.Range(0, dirtyGroundFootsteps.Count)];
+            soundFXAudioSource.clip = audioSources[UnityEngine.Random.Range(0, audioSources.Count)];
             soundFXAudioSource.Play();
         }
-        else if(characterController.velocity.magnitude > walkingSpeed && !soundFXAudioSource.isPlaying)
+        else if(characterController.velocity.magnitude > walkingSpeed && !soundFXAudioSource.isPlaying && lastAudioClip >= runningCooldown)
         {
+            List<AudioClip> audioSources = source == footstepSource.wood ? woodenGroundFootstepsRunning : dirtyGroundFootstepsRunning;
+
+            lastAudioClip = 0f;
             soundFXAudioSource.pitch = 0.7f;
-            soundFXAudioSource.clip = dirtyGroundFootsteps[Random.Range(0, dirtyGroundFootsteps.Count)];
+            soundFXAudioSource.clip = audioSources[UnityEngine.Random.Range(0, audioSources.Count)];
             soundFXAudioSource.Play();
         }
     }

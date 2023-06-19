@@ -10,6 +10,7 @@ public class SceneManager : MonoBehaviour
     [field: SerializeField] public Vector3 killerRespawnPoint { get; private set; }
 
     public bool startIntro = true;
+    public bool introDeath = true;
     private Car car;
     private StreetBuilder streetBuilder;
     private GameObject player;

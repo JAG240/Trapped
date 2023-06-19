@@ -53,7 +53,7 @@ public class KillerStateManager : MonoBehaviour
         sceneManager.resetLevel += ResetLevel;
         roomManager.killerHearing += HeardSound;
 
-        currentState = DoTasks;
+        currentState = Idle;
         currentState.EnterState(this);
     }
 

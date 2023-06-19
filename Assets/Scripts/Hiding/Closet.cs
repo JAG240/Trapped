@@ -51,6 +51,7 @@ public class Closet : Hiding, IInteractable, IPeekable
         if (!open)
         {
             open = true;
+            inputs.isHiding = true;
 
             charController.enabled = false;
 
@@ -69,6 +70,7 @@ public class Closet : Hiding, IInteractable, IPeekable
         }
 
         open = false;
+        inputs.isHiding = false;
 
         charController.enabled = false;
         playerCapsule.transform.position = transform.position + characterOffset + (-transform.right * 2);

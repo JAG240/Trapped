@@ -14,6 +14,7 @@ public class Room : MonoBehaviour
     [field: SerializeField] public bool agentAccessible { get; private set; } = false;
     public List<Door> doorList = new List<Door>();
     [field:SerializeField] public int visitCount { get; private set; }
+    public PlayerAudio.footstepSource audioType = PlayerAudio.footstepSource.wood;
 
     void Start()
     {
@@ -31,6 +32,7 @@ public class Room : MonoBehaviour
         {
             visitCount++;
             roomManager.UpdatePlayerCurrentRoom(this);
+            other.GetComponentInParent<PlayerAudio>().source = audioType;
             return;
         }
 
@@ -107,7 +109,7 @@ public class Room : MonoBehaviour
         {
             float distance = Vector3.Distance(killerPos, lantern.GetTaskPosition());
 
-            if(distance < closest && lantern.canInteract)
+            if(distance < closest && lantern.canInteract && lantern.killerInteract)
             {
                 closest = distance;
                 bestLantern = lantern;

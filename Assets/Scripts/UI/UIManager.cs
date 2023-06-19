@@ -202,6 +202,12 @@ public class UIManager : MonoBehaviour
 
     public void LoadRespawnMenu()
     {
+        if (sceneManager.introDeath)
+        {
+            Respawn();
+            return;
+        }
+
         uiDoc.visualTreeAsset = respawnMenu;
 
         var root = uiDoc.rootVisualElement;
@@ -224,12 +230,16 @@ public class UIManager : MonoBehaviour
 
     private void Respawn()
     {
-        var root = uiDoc.rootVisualElement;
+        if (!sceneManager.introDeath)
+        {
+            var root = uiDoc.rootVisualElement;
 
-        respawn = root.Q<Button>("respawn");
-        respawn.clicked -= Respawn;
+            respawn = root.Q<Button>("respawn");
+            respawn.clicked -= Respawn;
 
-        uiDoc.visualTreeAsset = crossHair;
+            uiDoc.visualTreeAsset = crossHair;
+        }
+
         LoadCrossHair();
         sceneManager.ResetLevel();
     }
