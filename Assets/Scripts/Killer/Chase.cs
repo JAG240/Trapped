@@ -23,5 +23,6 @@ public class Chase : KillerBaseState
     public override void ExitState(KillerStateManager Manager)
     {
         Manager.agent.speed = Manager.walkSpeed;
+        Manager.agent.ResetPath();
     }
 }

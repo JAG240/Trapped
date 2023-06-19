@@ -170,6 +170,28 @@ public class Room : MonoBehaviour
         return hidingList[Random.Range(0, hidingList.Count)];
     }
 
+    public Hiding GetClosetHiding(Vector3 pos)
+    {
+        if (hidingList.Count <= 0)
+            return null;
+
+        float bestDist = float.MaxValue;
+        Hiding bestSpot = null;
+
+        foreach(Hiding spot in hidingList)
+        {
+            float dist = Vector3.Distance(spot.transform.position, pos);
+
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                bestSpot = spot;
+            }
+        }
+
+        return bestSpot;
+    }
+
     public void RefreshAllRooms()
     {
         roomManager.RefreshAllRooms();

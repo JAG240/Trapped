@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
     {
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         uiDoc = GetComponent<UIDocument>();
-        sceneManager.playerDeath += (context) => LoadRespawnMenu();
+        sceneManager.playerDeath += (context) => LoadDeath();
         sceneManager.pauseGame += LoadPauseMenu;
         sceneManager.resumeGame += Resume;
         sceneManager.exitNote += CloseNote;
@@ -209,6 +209,17 @@ public class UIManager : MonoBehaviour
         respawn = root.Q<Button>("respawn");
 
         respawn.clicked += Respawn;
+    }
+
+    private void LoadDeath()
+    {
+        StartCoroutine(WaitForEyes());
+    }
+
+    private IEnumerator WaitForEyes()
+    {
+        yield return new WaitForSeconds(1.5f);
+        LoadRespawnMenu();
     }
 
     private void Respawn()

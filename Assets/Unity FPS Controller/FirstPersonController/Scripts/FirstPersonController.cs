@@ -338,7 +338,7 @@ namespace StarterAssets
 			Vector3 startCap = transform.position + new Vector3(0f, transform.localScale.y * 2 + 0.5f, 0f);
 			Vector3 endCap = transform.position + new Vector3(0f, transform.localScale.y * 3 + 0.75f, 0f);
 
-			if (!_releaseCrouch || Physics.CheckCapsule(startCap, endCap, 0.5f, crouchLayerMask))
+			if (!_releaseCrouch || Physics.CheckCapsule(startCap, endCap, 0.75f, crouchLayerMask))
 				return;
 
 			_releaseCrouch = false;

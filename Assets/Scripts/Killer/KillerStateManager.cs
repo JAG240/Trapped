@@ -160,8 +160,8 @@ public class KillerStateManager : MonoBehaviour
         //Possible to set non-player object as last seen location
         if (!obj)
         {
-            SwitchState(Investigate);
             playerLastSeen = new Vector3(player.position.x, player.position.y, player.position.z);
+            SwitchState(Investigate);
             return;
         }
 

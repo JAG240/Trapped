@@ -13,6 +13,9 @@ public class Investigate : KillerBaseState
 
         if(Manager.playerLastSeen != Vector3.zero)
         {
+            if (CheckForClosetEscape(Manager))
+                return;
+
             Manager.agent.SetDestination(Manager.playerLastSeen);
             return;
         }
@@ -32,6 +35,7 @@ public class Investigate : KillerBaseState
         Manager.agent.speed = Manager.walkSpeed;
 
         Manager.StopAllCoroutines();
+        Manager.killerAnimator.SetCheck(false);
 
         checkHiding = null;
         checking = false;
@@ -48,11 +52,36 @@ public class Investigate : KillerBaseState
         if(Manager.noise)
             Manager.noise = null;
 
-        if(Manager.noisyRoom && !checking)
+        if(Manager.noisyRoom && !checking || checkHiding)
             CheckHiding(Manager);
 
         if (Manager.noisyRoom == null && Manager.currentState==this)
             Manager.SwitchState(Manager.DoTasks);
+    }
+
+    private bool CheckForClosetEscape(KillerStateManager Manager)
+    {
+        Collider[] hits = Physics.OverlapSphere(Manager.playerLastSeen, 1.5f, LayerMask.GetMask("Room"));
+
+        if (hits.Length <= 0)
+            return false;
+
+        foreach(Collider hit in hits)
+        {
+            Room lastRoom = hit.GetComponent<Room>();
+
+            if (lastRoom != Manager.roomManager.playerCurrentRoom)
+                continue;
+
+            if(lastRoom != null)
+            {
+                checkHiding = lastRoom.GetClosetHiding(Manager.playerLastSeen);
+                Manager.agent.SetDestination(checkHiding.GetCheckPosition());
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void CheckHiding(KillerStateManager Manager)

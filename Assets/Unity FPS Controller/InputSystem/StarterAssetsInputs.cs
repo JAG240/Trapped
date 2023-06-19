@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -203,9 +204,16 @@ namespace StarterAssets
         private void ResetLevel()
         {
 			transform.position = sceneManager.playerRespawnPoint;
-			EnableCamera();
+			//create some post process shader to close eyes
 			firstPersonController.LookAt(Vector3.right);
+			StartCoroutine(WakeUp());
 		}
+
+		private IEnumerator WakeUp()
+        {
+			yield return new WaitForSeconds(1.5f);
+			EnableCamera();
+        }
     }
 	
 }
