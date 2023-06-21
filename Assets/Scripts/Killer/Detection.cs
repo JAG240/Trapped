@@ -15,11 +15,15 @@ public class Detection : MonoBehaviour
     public event Action<GameObject> detectedObject;
     [SerializeField] private bool playerInSight = false;
     [SerializeField] private LayerMask checkMask;
+    private SceneManager sceneManager;
 
     private void Start()
     {
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         StartCoroutine(CheckVision());
         checkMask = detectionMasks;
+
+        sceneManager.resetLevel += ResetSeen;
     }
 
     //Debug Method to see detection sphere
@@ -28,6 +32,11 @@ public class Detection : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radius);
     }*/
+
+    private void ResetSeen()
+    {
+        SetPlayerInSight(null);
+    }
 
     private IEnumerator CheckVision()
     {

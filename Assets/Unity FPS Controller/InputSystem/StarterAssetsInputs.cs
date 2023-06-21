@@ -35,8 +35,10 @@ namespace StarterAssets
 		private bool reading = false;
 		private bool paused = false;
 		public bool isHiding = false;
+		private bool inTransition = false;
 
-        private void Start()
+
+		private void Start()
         {
 			sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
 			characterController = GetComponent<CharacterController>();
@@ -56,6 +58,8 @@ namespace StarterAssets
 			sceneManager.resumeGame += ResumeGame;
 
 			sceneManager.playerPrefsUpdated += firstPersonController.LoadPlayerPref;
+
+			sceneManager.playerEneteredPorch += StartReturnTransition;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -229,6 +233,30 @@ namespace StarterAssets
 			yield return new WaitForSeconds(1.5f);
 			EnableCamera();
 			playerAudio.enabled = true;
+        }
+
+		private void StartReturnTransition()
+        {
+			if (inTransition)
+				return;
+
+			inTransition = true;
+			DisableCamera();
+			StopMovement();
+			playerAudio.enabled = false;
+			StartCoroutine(ReturnPlayer());
+        }
+
+		private IEnumerator ReturnPlayer()
+        {
+			yield return new WaitForSeconds(1.5f);
+			transform.position = sceneManager.playerReturnPoint;
+			firstPersonController.LookAt(sceneManager.playerReturnLookPoint);
+
+			yield return new WaitForSeconds(1.5f);
+			EnableCamera();
+			playerAudio.enabled = true;
+			inTransition = false;
         }
     }
 	

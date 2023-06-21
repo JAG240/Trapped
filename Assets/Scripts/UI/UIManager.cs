@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VisualTreeAsset note;
     [SerializeField] private VisualTreeAsset pauseMenu;
     [SerializeField] private VisualTreeAsset settingsMenu;
+    [SerializeField] private VisualTreeAsset credits;
 
     private SceneManager sceneManager;
     private UIDocument uiDoc;
@@ -207,6 +208,11 @@ public class UIManager : MonoBehaviour
             Respawn();
             return;
         }
+        else if(sceneManager.finalDeath)
+        {
+            LoadCredits();
+            return;
+        }
 
         uiDoc.visualTreeAsset = respawnMenu;
 
@@ -240,7 +246,19 @@ public class UIManager : MonoBehaviour
             uiDoc.visualTreeAsset = crossHair;
         }
 
+        sceneManager.introDeath = false;
         LoadCrossHair();
         sceneManager.ResetLevel();
+    }
+
+    private void LoadCredits()
+    {
+        uiDoc.visualTreeAsset = credits;
+
+        var root = uiDoc.rootVisualElement;
+
+        Button reload = root.Q<Button>("mainmenu");
+
+        reload.clicked += sceneManager.ReloadGame;
     }
 }

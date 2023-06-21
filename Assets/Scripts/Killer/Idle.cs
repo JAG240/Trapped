@@ -6,6 +6,7 @@ public class Idle : KillerBaseState
 {
     public override void EnterState(KillerStateManager Manager)
     {
+        Manager.StopAllCoroutines();
         Manager.agent.enabled = false;
     }
 

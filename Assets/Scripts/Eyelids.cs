@@ -17,19 +17,18 @@ public class Eyelids : MonoBehaviour
     [SerializeField] private float eyeLidSpeed = 3f;
 
     private SceneManager sceneManager;
-    private bool eyesOpen = true;
+    private bool inTransition = false;
 
     private void Start()
     {
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         sceneManager.playerDeath += (context) => PlayerDied();
         sceneManager.resetLevel += ResetLevel;
+        sceneManager.playerEneteredPorch += EnterPorch;
     }
 
     private void PlayerDied()
     {
-        topEyeLid.SetActive(true);
-        bottomEyeLid.SetActive(true);
         StartCoroutine(ChangeEyeLidState(false));
     }
 
@@ -38,10 +37,33 @@ public class Eyelids : MonoBehaviour
         StartCoroutine(ChangeEyeLidState(true));
     }
 
+    private void EnterPorch()
+    {
+        if (inTransition)
+            return;
+
+        inTransition = true;
+        StartCoroutine(PorchTansition());
+    }
+
+    private IEnumerator PorchTansition()
+    {
+        StartCoroutine(ChangeEyeLidState(false));
+        yield return new WaitForSeconds(eyeLidSpeed);
+        StartCoroutine(ChangeEyeLidState(true));
+        yield return new WaitForSeconds(eyeLidSpeed);
+        inTransition = false;
+    }
+
     private IEnumerator ChangeEyeLidState(bool isOpen)
     {
-        float t = 0f;
+        if (!isOpen)
+        {
+            topEyeLid.SetActive(true);
+            bottomEyeLid.SetActive(true);
+        }
 
+        float t = 0f;
 
         float topStartY = isOpen ? topClosePos : topOpenPos;
         float topEndY = isOpen ? topOpenPos : topClosePos;
@@ -72,7 +94,5 @@ public class Eyelids : MonoBehaviour
             topEyeLid.SetActive(false);
             bottomEyeLid.SetActive(false);
         }
-
-        eyesOpen = isOpen;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,13 @@ using UnityEngine.AI;
 public class SceneManager : MonoBehaviour
 {
     [field: SerializeField] public Vector3 playerRespawnPoint { get; private set; }
+    [field: SerializeField] public Vector3 playerReturnPoint { get; private set; }
+    [field: SerializeField] public Vector3 playerReturnLookPoint { get; private set; }
     [field: SerializeField] public Vector3 killerRespawnPoint { get; private set; }
 
     public bool startIntro = true;
     public bool introDeath = true;
+    public bool finalDeath = false;
     private Car car;
     private StreetBuilder streetBuilder;
     private GameObject player;
@@ -32,6 +36,8 @@ public class SceneManager : MonoBehaviour
     public Action resumeGame;
 
     public Action playerPrefsUpdated;
+
+    public Action playerEneteredPorch;
 
     void Start()
     {
@@ -63,7 +69,8 @@ public class SceneManager : MonoBehaviour
 
     public void IntroAttack()
     {
-        introKill?.Invoke();
+        if(introDeath)
+            introKill?.Invoke();
     }
 
     public void KillPlayer(KillerStateManager killer)
@@ -117,5 +124,17 @@ public class SceneManager : MonoBehaviour
     public void UpdatePlayerPrefs()
     {
         playerPrefsUpdated?.Invoke();
+    }
+
+    public void EnterPorch()
+    {
+        playerEneteredPorch?.Invoke();
+    }
+
+    public void ReloadGame()
+    {
+        Scene game = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(game.name);
     }
 }

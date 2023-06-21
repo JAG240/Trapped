@@ -149,6 +149,10 @@ public class RoomManager : MonoBehaviour
     public ChopTable CheckForChop(Transform killer)
     {
         Room killerRoom = GetRoom(killer);
+
+        if (!killerRoom)
+            return null;
+
         return killerRoom.GetChopTask();
     }
 

@@ -32,6 +32,8 @@ public class KillerStateManager : MonoBehaviour
     [field: SerializeField] public float walkSpeed { get; private set; } = 3.5f;
     [field: SerializeField] public float runSpeed { get; private set; } = 6f;
 
+    private bool endingKill = false;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -52,6 +54,7 @@ public class KillerStateManager : MonoBehaviour
         sceneManager.introKill += IntroWarp;
         sceneManager.resetLevel += ResetLevel;
         roomManager.killerHearing += HeardSound;
+        sceneManager.playerEneteredPorch += EndingKill;
 
         currentState = Idle;
         currentState.EnterState(this);
@@ -144,26 +147,53 @@ public class KillerStateManager : MonoBehaviour
 
     private void IntroWarp()
     {
-        agent.Warp(player.position - (Camera.main.transform.forward * 2.5f));
+        Vector3 warpPos = player.position;
+        warpPos.y += 0.5f;
+
+        agent.Warp(warpPos - (Camera.main.transform.forward * 2.2f));
         lookAt(player.position);
     }
 
     private void ResetLevel()
     {
+        if (sceneManager.finalDeath)
+            return;
+
+        SwitchState(Idle);
         agent.Warp(sceneManager.killerRespawnPoint);
         SwitchState(DoTasks);
+    }
+
+    private void EndingKill()
+    {
+        if (endingKill)
+            return;
+
+        SwitchState(Idle);
+        endingKill = true;
+        StartCoroutine(WaitToKill());
+    }
+
+    private IEnumerator WaitToKill()
+    {
+        sceneManager.finalDeath = true;
+        yield return new WaitForSeconds(5f);
+        IntroWarp();
     }
 
     //Can be passed non-player object
     private void seenObject(GameObject obj)
     {
         //Possible to set non-player object as last seen location
-        if (!obj)
+        if (!obj && currentState == Chase)
         {
             playerLastSeen = new Vector3(player.position.x, player.position.y, player.position.z);
             SwitchState(Investigate);
             return;
         }
+
+        if (!obj)
+            return;
 
         if (obj.name == "PlayerCapsule")
         {
