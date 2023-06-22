@@ -118,4 +118,9 @@ public class Detection : MonoBehaviour
             checkMask = detectionMasks;
         }
     }
+
+    public void ClearPlayerInSight()
+    {
+        SetPlayerInSight(null);
+    }
 }

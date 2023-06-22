@@ -178,6 +178,7 @@ public class KillerStateManager : MonoBehaviour
     {
         sceneManager.finalDeath = true;
         yield return new WaitForSeconds(5f);
+        detection.ClearPlayerInSight();
         IntroWarp();
     }
 

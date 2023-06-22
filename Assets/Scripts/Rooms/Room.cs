@@ -154,6 +154,9 @@ public class Room : MonoBehaviour
     public Task GetRandomTask()
     {
         List<Task> availableTasks = new List<Task>();
+        
+        if(taskList.Count < 1 || taskList == null)
+            return null;
 
         foreach(Task task in taskList)
         {
