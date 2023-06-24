@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 131849653}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0.486}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.107999966, y: 0.34, z: -0.49499997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 325754101096536235}
-  m_RootOrder: 1
+  m_Father: {fileID: 8790789377030667484}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7887466838775144296
 BoxCollider:
@@ -75,7 +75,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 325754101096536235}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1754608214628596505
 BoxCollider:
@@ -206,6 +206,11 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: -0.001, z: -0.006}
   m_TimeToStationary: 0.5
+--- !u!4 &8790789377030667484 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7604813181263469167, guid: 39e21023b0141d34da9b89330d1015e3, type: 3}
+  m_PrefabInstance: {fileID: 1186295080858314419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1186295081115179635
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -458,11 +463,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0f3f23e8d9964fa2a8fcdb41e292c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeDoor: 1
+  registerDoor: 1
+  <isLocked>k__BackingField: 0
+  openDoor: {fileID: 8300000, guid: b2307d0bb800a5c43ad71cb7c6fa4716, type: 3}
+  closeDoor: {fileID: 8300000, guid: f5e15e1c2836e1340937f4a8180e25cd, type: 3}
   pivotPoint: {fileID: 131849654}
   peekAngle: 10
   isSus: 0
-  openDoor: {fileID: 8300000, guid: b2307d0bb800a5c43ad71cb7c6fa4716, type: 3}
-  closeDoor: {fileID: 8300000, guid: f5e15e1c2836e1340937f4a8180e25cd, type: 3}
-  activeDoor: 1
-  registerDoor: 1
   navMeshLock: {fileID: 8829273015276716085}
