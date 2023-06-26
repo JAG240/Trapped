@@ -93,4 +93,15 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
+
+    public void ClearHands()
+    {
+        rightHeldItem.heldItem = null;
+        rightHeldItem.objBody = null;
+        rightHeldItem.objCollider = null;
+
+        leftHeldItem.heldItem = null;
+        leftHeldItem.objBody = null;
+        leftHeldItem.objCollider = null;
+    }
 }

@@ -11,6 +11,7 @@ public class Interact : MonoBehaviour
     private LayerMask peekMask;
     private PlayerInventory playerInventory;
     private UIManager uiManager;
+    private SceneManager sceneManager;
 
     private void Start()
     {
@@ -18,6 +19,9 @@ public class Interact : MonoBehaviour
         peekMask = LayerMask.GetMask("Peekable");
         playerInventory = GetComponent<PlayerInventory>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.resetLevel += ResetLevel;
     }
 
     private void FixedUpdate()
@@ -32,7 +36,9 @@ public class Interact : MonoBehaviour
 
         GameObject obj = hits[0].transform.gameObject;
 
-        if (obj.GetComponent<PlaceableArea>() != null || obj.GetComponent<IInteractable>() != null || obj.transform.parent.GetComponent<IInteractable>() != null)
+        if (obj.GetComponent<PlaceableArea>() != null || obj.GetComponent<IInteractable>() != null)
+            uiManager.SetCrossHairColor(true);
+        else if (obj.transform.parent != null && obj.transform.parent.GetComponent<IInteractable>() != null)
             uiManager.SetCrossHairColor(true);
         else
             uiManager.SetCrossHairColor(false);
@@ -125,5 +131,8 @@ public class Interact : MonoBehaviour
         peekedObj = null;
     }
 
-
+    private void ResetLevel()
+    {
+        playerInventory.ClearHands();
+    }
 }

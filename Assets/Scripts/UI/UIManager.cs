@@ -199,6 +199,7 @@ public class UIManager : MonoBehaviour
     {
         UnloadPauseMenu();
         uiDoc.visualTreeAsset = crossHair;
+        LoadCrossHair();
     }
 
     public void LoadRespawnMenu()
@@ -258,7 +259,9 @@ public class UIManager : MonoBehaviour
         var root = uiDoc.rootVisualElement;
 
         Button reload = root.Q<Button>("mainmenu");
+        Button quit = root.Q<Button>("quit");
 
         reload.clicked += sceneManager.ReloadGame;
+        quit.clicked += Application.Quit;
     }
 }

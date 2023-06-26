@@ -172,6 +172,9 @@ public class Room : MonoBehaviour
 
     public Hiding GetRandomHiding()
     {
+        if (hidingList.Count <= 0)
+            return null;
+
         return hidingList[Random.Range(0, hidingList.Count)];
     }
 

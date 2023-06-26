@@ -13,7 +13,12 @@ public class BodyParts : MonoBehaviour, IInteractable
 
     public void Interact(GameObject player)
     {
-        player.GetComponent<PlayerInventory>().PutInHands(gameObject, true);
+        PlayerInventory playerInventory = player.GetComponent<PlayerInventory>();
+
+        if (playerInventory.HandsFull(true))
+            return;
+
+        playerInventory.PutInHands(gameObject, true);
     }
 
     public void GetChopped(PlaceableArea area)

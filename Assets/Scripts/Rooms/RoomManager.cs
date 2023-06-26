@@ -125,7 +125,7 @@ public class RoomManager : MonoBehaviour
 
     public Room GetRoom(Transform pos)
     {
-        Collider[] hits = Physics.OverlapSphere(pos.position, 0.2f, LayerMask.GetMask("Room"));
+        Collider[] hits = Physics.OverlapSphere(pos.position, 1f, LayerMask.GetMask("Room"));
         return hits.Count() > 0 ? hits[0].GetComponent<Room>() : null;
     }
 
