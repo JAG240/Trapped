@@ -140,35 +140,67 @@ public class UIManager : MonoBehaviour
 
         var root = uiDoc.rootVisualElement;
 
-        Slider camSens = root.Q<Slider>("camsens");
+        SliderInt camSens = root.Q<SliderInt>("camSens");
+        SliderInt masterAudio = root.Q<SliderInt>("masterAudio");
+        SliderInt brightness = root.Q<SliderInt>("brightness");
+
         Button save = root.Q<Button>("save");
 
-        camSens.value = PlayerPrefs.GetFloat("cam_sens");
+        camSens.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("cam_sens") * 100);
+        masterAudio.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("main_volume") * 100);
+        brightness.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("brightness") * 100);
 
         camSens.RegisterValueChangedCallback(UpdateCameraSens);
-        save.clicked += UnloadSettings;
-    }
+        masterAudio.RegisterValueChangedCallback(UpdateMasterAudio);
+        brightness.RegisterValueChangedCallback(UpdateBrightness);
 
-    public void UpdateCameraSens(ChangeEvent<float> newSens)
-    {
-        PlayerPrefs.SetFloat("cam_sens", newSens.newValue);
-        sceneManager.UpdatePlayerPrefs();
+        save.clicked += UnloadSettings;
     }
 
     private void UnloadSettings()
     {
         var root = uiDoc.rootVisualElement;
 
-        Slider camSens = root.Q<Slider>("camsens");
+        SliderInt camSens = root.Q<SliderInt>("camSens");
+        SliderInt masterAudio = root.Q<SliderInt>("masterAudio");
+        SliderInt brightness = root.Q<SliderInt>("brightness");
+
         Button save = root.Q<Button>("save");
 
         camSens.UnregisterValueChangedCallback(UpdateCameraSens);
+        masterAudio.UnregisterValueChangedCallback(UpdateMasterAudio);
+        brightness.UnregisterValueChangedCallback(UpdateBrightness);
+
         save.clicked += UnloadSettings;
 
         if (wasPaused)
             LoadPauseMenu();
         else
             LoadMainMenu();
+    }
+
+    private void UpdateCameraSens(ChangeEvent<int> newSens)
+    {
+        float sens = newSens.newValue / 100f;
+
+        PlayerPrefs.SetFloat("cam_sens", sens);
+        sceneManager.UpdatePlayerPrefs();
+    }
+
+    private void UpdateMasterAudio(ChangeEvent<int> newAudio)
+    {
+        float vol = newAudio.newValue / 100f;
+
+        PlayerPrefs.SetFloat("main_volume", vol);
+        sceneManager.UpdatePlayerPrefs();
+    }
+
+    private void UpdateBrightness(ChangeEvent<int> newBrightness)
+    {
+        float bright = newBrightness.newValue / 100f;
+
+        PlayerPrefs.SetFloat("brightness", bright);
+        sceneManager.UpdatePlayerPrefs();
     }
 
     public void LoadPauseMenu()

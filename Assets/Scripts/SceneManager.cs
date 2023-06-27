@@ -51,6 +51,9 @@ public class SceneManager : MonoBehaviour
             player.GetComponent<PlayerAudio>().StartIntroMusic();
             car.EnterCar();
         }
+
+        playerPrefsUpdated += UpdateLighting;
+        UpdatePlayerPrefs();
     }
 
     public void StartGame()
@@ -136,5 +139,10 @@ public class SceneManager : MonoBehaviour
         Scene game = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene(game.name);
+    }
+
+    private void UpdateLighting()
+    {
+        RenderSettings.ambientIntensity = PlayerPrefs.GetFloat("brightness");
     }
 }

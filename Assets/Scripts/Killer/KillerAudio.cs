@@ -21,16 +21,20 @@ public class KillerAudio : MonoBehaviour
 
     private AudioLowPassFilter lowPassFilter;
     private Transform player;
+    private SceneManager sceneManager;
+    private float defaultVolume;
+    private float defaultVoiceVolume;
 
     void Start()
     {
         lowPassFilter = GetComponent<AudioLowPassFilter>();
         player = GameObject.Find("Player").transform;
-    }
 
-    void Update()
-    {
-        
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.playerPrefsUpdated += UpdateAudioVolume;
+        defaultVolume = audioSource.volume;
+        defaultVoiceVolume = killerVoice.volume;
     }
 
     public float Remap(float inMin, float inMax, float outMin, float outMax, float v)
@@ -80,5 +84,12 @@ public class KillerAudio : MonoBehaviour
         killerVoice.pitch = 1f;
         killerVoice.clip = angryPig;
         killerVoice.Play();
+    }
+
+    private void UpdateAudioVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        killerVoice.volume = defaultVoiceVolume * volume;
+        audioSource.volume = defaultVolume * volume;
     }
 }

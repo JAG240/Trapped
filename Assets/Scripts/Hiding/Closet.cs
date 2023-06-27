@@ -17,6 +17,8 @@ public class Closet : Hiding, IInteractable, IPeekable
     [SerializeField] private AudioClip close;
     [SerializeField] private AudioClip playerInteract;
     private AudioSource audioSource;
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
@@ -27,7 +29,12 @@ public class Closet : Hiding, IInteractable, IPeekable
         doors[1] = transform.Find("Door_R").gameObject;
         hiding = GetComponent<Hiding>();
         audioSource = GetComponent<AudioSource>();
-        GameObject.Find("SceneManager").GetComponent<SceneManager>().resetLevel += ResetState;
+
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.resetLevel += ResetState;
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
     }
 
     private void ResetState()
@@ -124,5 +131,11 @@ public class Closet : Hiding, IInteractable, IPeekable
     public override Vector3 GetPosition()
     {
         return transform.position + (-transform.right * 2);
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }

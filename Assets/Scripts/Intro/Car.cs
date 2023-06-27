@@ -20,6 +20,7 @@ public class Car : MonoBehaviour
     private Transform rpmNeedle;
     private Transform speedNeedle;
     private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Awake()
     {
@@ -31,6 +32,12 @@ public class Car : MonoBehaviour
         rpmNeedle = transform.Find("Needle_RPM");
         speedNeedle = transform.Find("Needle_Speedometer");
         sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+    }
+
+    private void Start()
+    {
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
     }
 
     public void EnterCar()
@@ -96,6 +103,12 @@ public class Car : MonoBehaviour
         yield return new WaitForSeconds(doorOpen.length);
         audioSource.clip = doorClose;
         audioSource.Play();
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 
 #if UNITY_EDITOR

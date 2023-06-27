@@ -6,6 +6,8 @@ public class Key : MonoBehaviour, IInteractable
 {
     [field: SerializeField] public string keyID { get; private set; }
     private AudioSource audioSource;
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
@@ -13,6 +15,19 @@ public class Key : MonoBehaviour, IInteractable
             Debug.LogError($"{name} does not have a keyID!");
 
         audioSource = GetComponent<AudioSource>();
+
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
+    }
+
+    private void OnDestroy()
+    {
+        if (sceneManager == null)
+            return;
+
+        sceneManager.playerPrefsUpdated -= UpdateVolume;
     }
 
     public void Interact(GameObject player)
@@ -26,5 +41,11 @@ public class Key : MonoBehaviour, IInteractable
 
         inventory.PutInHands(gameObject, false);
         audioSource.Play();
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }

@@ -208,32 +208,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4742243535729162399, guid: 66b6e4147cc520242ba96844b57f30c9, type: 3}
   m_PrefabInstance: {fileID: 648994139397920358}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5198960028973605437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5246242654409780985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8620e381deb5954ca5db20ba1eec50d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldownTimer: 30
-  taskTime: 5
-  taskPosOffset: 1
-  onCooldown: 0
-  RegisterTask: 0
-  showTaskPosition: 0
-  minIntensity: 0.6
-  maxIntensity: 1
-  minFlickerTime: 0.3
-  maxFlickerTime: 0.5
-  lit: 1
-  litMat: {fileID: 2100000, guid: cc50b011dba0a9f4fa30217687add6b7, type: 2}
-  unlitMat: {fileID: 2100000, guid: edc1f1a08535c324abe7dffaab3dad4c, type: 2}
-  canInteract: 1
 --- !u!82 &4631269837325859023
 AudioSource:
   m_ObjectHideFlags: 0
@@ -320,7 +294,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 1.1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -330,6 +304,33 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5198960028973605437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5246242654409780985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8620e381deb5954ca5db20ba1eec50d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownTimer: 30
+  taskTime: 5
+  taskPosOffset: 1
+  onCooldown: 0
+  RegisterTask: 0
+  showTaskPosition: 0
+  minIntensity: 0.6
+  maxIntensity: 1
+  minFlickerTime: 0.3
+  maxFlickerTime: 0.5
+  <lit>k__BackingField: 1
+  litMat: {fileID: 2100000, guid: cc50b011dba0a9f4fa30217687add6b7, type: 2}
+  unlitMat: {fileID: 2100000, guid: edc1f1a08535c324abe7dffaab3dad4c, type: 2}
+  <canInteract>k__BackingField: 1
+  <killerInteract>k__BackingField: 1
 --- !u!4 &6565415345855625006 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5916809360905920840, guid: 66b6e4147cc520242ba96844b57f30c9, type: 3}

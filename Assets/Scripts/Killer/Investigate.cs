@@ -75,7 +75,12 @@ public class Investigate : KillerBaseState
             if(lastRoom != null)
             {
                 checkHiding = lastRoom.GetClosetHiding(Manager.playerLastSeen);
+
+                if (!checkHiding)
+                    return false;
+
                 Manager.agent.SetDestination(checkHiding.GetCheckPosition());
+
                 return true;
             }
         }

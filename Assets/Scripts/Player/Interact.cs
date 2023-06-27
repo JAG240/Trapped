@@ -133,6 +133,12 @@ public class Interact : MonoBehaviour
 
     private void ResetLevel()
     {
+        if (playerInventory.HandsFull(true))
+            playerInventory.DropItem(true);
+
+        if (playerInventory.HandsFull(false))
+            playerInventory.DropItem(false);
+
         playerInventory.ClearHands();
     }
 }

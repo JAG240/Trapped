@@ -30,6 +30,9 @@ public class PlayerAudio : MonoBehaviour
     private CharacterController characterController;
     private float lastAudioClip = 0;
     public footstepSource source = footstepSource.concrete;
+    private SceneManager sceneManager;
+    private float defaultVoiceVolume;
+    private float defaultFXVolume;
 
     [Serializable]
     public enum footstepSource
@@ -40,6 +43,12 @@ public class PlayerAudio : MonoBehaviour
     void Start()
     {
         characterController = GetComponentInChildren<CharacterController>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        sceneManager.playerEneteredPorch += EnterPorch;
+        defaultFXVolume = soundFXAudioSource.volume;
+        defaultVoiceVolume = voiceAudioSource.volume;
     }
 
     private void FixedUpdate()
@@ -96,5 +105,17 @@ public class PlayerAudio : MonoBehaviour
     {
         voiceAudioSource.clip = introSigh;
         voiceAudioSource.Play();
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        voiceAudioSource.volume = defaultVoiceVolume * volume;
+        soundFXAudioSource.volume = defaultFXVolume * volume;
+    }
+
+    private void EnterPorch()
+    {
+        source = footstepSource.concrete;
     }
 }

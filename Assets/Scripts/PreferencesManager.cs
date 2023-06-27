@@ -13,7 +13,7 @@ public class PreferencesManager : MonoBehaviour
             PlayerPrefs.SetFloat("main_vol", 1f);
 
         if (!PlayerPrefs.HasKey("brightness"))
-            PlayerPrefs.SetFloat("brightness", 1f);
+            PlayerPrefs.SetFloat("brightness", 0.01f);
 
         PlayerPrefs.Save();
     }

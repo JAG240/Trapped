@@ -1,60 +1,29 @@
-.slider {
-    min-width: 100%;
-    min-height: 50%;
-    flex-direction: row;
-    font-size: 46px;
-    align-items: center;
-    cursor: initial;
-}
-
-.unity-slider {
-}
-
-.unity-base-slider {
-    -unity-text-align: upper-center;
-}
-
-#camsens #unity-text-field #unity-text-input {
-    font-size: 60px;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    overflow: hidden;
-    color: rgba(53, 53, 53, 255);
-}
-
-#camsens #unity-text-field {
-    min-height: 100px;
-    min-width: 150px;
+#unity-drag-container {
+    justify-content: center;
 }
 
 #unity-tracker {
-    min-height: 20px;
+    height: 20px;
     justify-content: center;
-    align-items: stretch;
-    min-width: auto;
+    align-items: center;
 }
 
 #unity-dragger {
-    min-height: 40px;
-    justify-content: flex-start;
-    max-width: none;
-    min-width: 3%;
-    max-height: 50%;
-    align-items: center;
-    flex-direction: column-reverse;
-    top: 50px;
+    width: 20px;
+    height: 35px;
 }
 
-#unity-drag-container {
+#unity-text-field {
     justify-content: center;
-    min-height: auto;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    min-width: 50%;
-    max-width: 50%;
-    top: 8px;
+    margin-top: 20px;
+    width: 100px;
+    height: 100px;
+    font-size: 45px;
+    -unity-text-align: middle-center;
+    -unity-background-image-tint-color: rgba(0, 0, 0, 255);
+}
+
+#unity-text-input {
+    -unity-background-image-tint-color: rgba(0, 0, 0, 255);
+    color: rgba(0, 0, 0, 255);
 }

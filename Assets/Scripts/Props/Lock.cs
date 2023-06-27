@@ -9,11 +9,25 @@ public class Lock : MonoBehaviour
     [SerializeField] private AudioClip failedUnlock;
     private string keyID;
     private AudioSource audioSource;
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
         keyID = key.keyID;
         audioSource = GetComponent<AudioSource>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
+    }
+
+    private void OnDestroy()
+    {
+        if (sceneManager == null)
+            return;
+
+        sceneManager.playerPrefsUpdated -= UpdateVolume;
     }
 
     public bool Unlock(PlayerInventory playerInventory)
@@ -36,5 +50,11 @@ public class Lock : MonoBehaviour
 
         if(unlock)
             Destroy(gameObject);
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }

@@ -19,6 +19,8 @@ public class Lantern : Task, IInteractable
     private MeshRenderer lightMat;
     private MeshCollider meshCollider;
     protected AudioSource audioSource;
+    private SceneManager sceneManager;
+    private float defaultVolume; 
 
     protected override void Start()
     {
@@ -35,6 +37,10 @@ public class Lantern : Task, IInteractable
         currentMaxIntensity = lit ? maxIntensity : 0;
         currentMinIntensity = lit ? minIntensity : 0;
         ChangeLanternMat();
+
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
     }
 
     override public Vector3 GetTaskPosition()
@@ -97,5 +103,11 @@ public class Lantern : Task, IInteractable
     {
         canInteract = state;
         meshCollider.enabled = canInteract;
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }

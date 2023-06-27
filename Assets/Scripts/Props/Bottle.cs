@@ -13,6 +13,8 @@ public class Bottle : MonoBehaviour, IStateComparable, IInteractable
     private GhostBottle ghost;
     private AudioSource audioSource;
     private RoomManager roomManager;
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
@@ -23,6 +25,10 @@ public class Bottle : MonoBehaviour, IStateComparable, IInteractable
 
         audioSource = GetComponent<AudioSource>();
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
     }
 
     public bool StateChanged()
@@ -78,6 +84,12 @@ public class Bottle : MonoBehaviour, IStateComparable, IInteractable
             audioSource.Play();
             roomManager.GlobalAudioAlert(gameObject);
         }
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 
     public void Interact(GameObject player)
