@@ -20,6 +20,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     [SerializeField] private float peekAngle = 5f;
     [SerializeField] private bool isSus = false;
     [SerializeField] private NavMeshObstacle navMeshLock;
+    [SerializeField] private Collider peakable;
 
     private AudioSource audioSource;
     private List<Lock> locks;
@@ -27,6 +28,8 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     public bool open { get; private set; } = false;
     private GameObject door;
     public List<Room> roomList { get; private set; } = new List<Room>();
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
@@ -38,6 +41,10 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
             navMeshLock.enabled = false;
         else
             isLocked = true;
+
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
 
         if (!registerDoor)
             return;
@@ -55,7 +62,6 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
     {
         if (!CheckLocks(player.GetComponent<PlayerInventory>()))
         {
-            //tell the player they do not have the correct key
             return;
         }
 
@@ -80,6 +86,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         audioSource.Play();
         open = true;
         RotateDoor(90f);
+        peakable.enabled = false;
     }
 
     public void CloseDoor()
@@ -91,6 +98,7 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         audioSource.Play();
         open = false;
         RotateDoor(-90f);
+        peakable.enabled = true;
     }
 
     public void Peek(GameObject obj, bool state)
@@ -163,5 +171,11 @@ public class Door : MonoBehaviour, IInteractable, IPeekable, IStateComparable
         }
 
         return false;
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }
