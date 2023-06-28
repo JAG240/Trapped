@@ -20,6 +20,7 @@ public class SceneManager : MonoBehaviour
     private GameObject player;
     private bool mainMenu = false;
     private bool paused = false;
+    private bool inSettings = false;
 
     public Action<KillerStateManager> playerDeath;
     public Action resetLevel;
@@ -38,6 +39,8 @@ public class SceneManager : MonoBehaviour
     public Action playerPrefsUpdated;
 
     public Action playerEneteredPorch;
+
+    public Action exitSettings;
 
     void Start()
     {
@@ -115,10 +118,18 @@ public class SceneManager : MonoBehaviour
         pauseGame?.Invoke();
     }
 
+    public void SettingsState(bool newState)
+    {
+        inSettings = newState;
+    }
+
     public void ResumeGame()
     {
         if (!paused)
             return;
+
+        if (inSettings)
+            exitSettings?.Invoke();
 
         paused = false;
         resumeGame?.Invoke();

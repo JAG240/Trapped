@@ -136,6 +136,9 @@ public class UIManager : MonoBehaviour
             wasPaused = true;
         }
 
+        sceneManager.SettingsState(true);
+        sceneManager.exitSettings += UnloadSettings;
+
         uiDoc.visualTreeAsset = settingsMenu;
 
         var root = uiDoc.rootVisualElement;
@@ -161,6 +164,9 @@ public class UIManager : MonoBehaviour
 
     private void UnloadSettings()
     {
+        sceneManager.SettingsState(false);
+        sceneManager.exitSettings -= UnloadSettings;
+
         var root = uiDoc.rootVisualElement;
 
         SliderInt camSens = root.Q<SliderInt>("camSens");
