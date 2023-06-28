@@ -143,16 +143,18 @@ public class UIManager : MonoBehaviour
         SliderInt camSens = root.Q<SliderInt>("camSens");
         SliderInt masterAudio = root.Q<SliderInt>("masterAudio");
         SliderInt brightness = root.Q<SliderInt>("brightness");
-
+        Toggle fullscreen = root.Q<Toggle>("fullscreen");
         Button save = root.Q<Button>("save");
 
         camSens.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("cam_sens") * 100);
         masterAudio.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("main_volume") * 100);
         brightness.value = Mathf.RoundToInt(PlayerPrefs.GetFloat("brightness") * 100);
+        fullscreen.value = PlayerPrefs.GetInt("fullscreen") == 0 ? false : true;
 
         camSens.RegisterValueChangedCallback(UpdateCameraSens);
         masterAudio.RegisterValueChangedCallback(UpdateMasterAudio);
         brightness.RegisterValueChangedCallback(UpdateBrightness);
+        fullscreen.RegisterValueChangedCallback(UpdateFullscreen);
 
         save.clicked += UnloadSettings;
     }
@@ -164,6 +166,7 @@ public class UIManager : MonoBehaviour
         SliderInt camSens = root.Q<SliderInt>("camSens");
         SliderInt masterAudio = root.Q<SliderInt>("masterAudio");
         SliderInt brightness = root.Q<SliderInt>("brightness");
+        DropdownField monitor = root.Q<DropdownField>("monitor");
 
         Button save = root.Q<Button>("save");
 
@@ -203,6 +206,14 @@ public class UIManager : MonoBehaviour
         sceneManager.UpdatePlayerPrefs();
     }
 
+    private void UpdateFullscreen(ChangeEvent<bool> newState)
+    {
+        int screen = newState.newValue ? 1 : 0;
+
+        PlayerPrefs.SetInt("fullscreen", screen);
+        sceneManager.UpdatePlayerPrefs();
+    }
+
     public void LoadPauseMenu()
     {
         uiDoc.visualTreeAsset = pauseMenu;
@@ -211,9 +222,11 @@ public class UIManager : MonoBehaviour
 
         Button resume = root.Q<Button>("resume");
         Button settings = root.Q<Button>("settings");
+        Button quit = root.Q<Button>("quit");
 
         resume.clicked += sceneManager.ResumeGame;
         settings.clicked += LoadSettings;
+        quit.clicked += Application.Quit;
     }
 
     private void UnloadPauseMenu()
@@ -222,9 +235,11 @@ public class UIManager : MonoBehaviour
 
         Button resume = root.Q<Button>("resume");
         Button settings = root.Q<Button>("settings");
+        Button quit = root.Q<Button>("quit");
 
         resume.clicked -= sceneManager.ResumeGame;
         settings.clicked -= LoadSettings;
+        quit.clicked -= Application.Quit;
     }
 
     public void Resume()

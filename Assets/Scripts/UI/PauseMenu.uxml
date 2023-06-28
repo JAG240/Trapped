@@ -1,8 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="root" style="height: 1440px; width: 2560px; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
+    <ui:VisualElement name="root" style="height: 100%; width: 100%; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
         <ui:VisualElement name="menu-container" style="flex-direction: column; justify-content: center; position: absolute; height: 220px; width: 936px; top: auto; left: auto; align-items: center; margin-left: 0;">
             <ui:Button text="Resume" display-tooltip-when-elided="true" name="resume" style="width: 304px; height: 126px; font-size: 48px; -unity-font-style: normal; margin-right: 10px;" />
             <ui:Button text="Settings" display-tooltip-when-elided="true" name="settings" style="width: 304px; height: 126px; font-size: 48px; -unity-font-style: normal; margin-right: 10px; margin-top: 63px;" />
+            <ui:Button text="Quit" display-tooltip-when-elided="true" name="quit" style="width: 304px; height: 126px; font-size: 48px; -unity-font-style: normal; margin-right: 10px; margin-top: 63px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

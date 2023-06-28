@@ -10,13 +10,14 @@ public class PreferencesManager : MonoBehaviour
             PlayerPrefs.SetFloat("cam_sens", 1f);
 
         if (!PlayerPrefs.HasKey("main_volume"))
-            PlayerPrefs.SetFloat("main_vol", 1f);
+            PlayerPrefs.SetFloat("main_volume", 1f);
 
         if (!PlayerPrefs.HasKey("brightness"))
             PlayerPrefs.SetFloat("brightness", 0.01f);
 
+        if (!PlayerPrefs.HasKey("fullscreen"))
+            PlayerPrefs.SetInt("fullscreen", 1);
+
         PlayerPrefs.Save();
     }
-
-
 }

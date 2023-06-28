@@ -117,7 +117,10 @@ public class KillerStateManager : MonoBehaviour
     {
         if(other.transform.tag == "Door")
         {
-            other.transform.parent.GetComponent<Door>().OpenDoor();
+            Door door = other.transform.parent.GetComponent<Door>();
+
+            if (!door.isLocked)
+                door.OpenDoor();
         }
 
         if(other.name == "Room")

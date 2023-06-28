@@ -52,7 +52,7 @@ public class SceneManager : MonoBehaviour
             car.EnterCar();
         }
 
-        playerPrefsUpdated += UpdateLighting;
+        playerPrefsUpdated += UpdatePrefs;
         UpdatePlayerPrefs();
     }
 
@@ -141,8 +141,21 @@ public class SceneManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(game.name);
     }
 
+    private void UpdatePrefs()
+    {
+        UpdateLighting();
+        UpdateFullscreen();
+    }
+
     private void UpdateLighting()
     {
         RenderSettings.ambientIntensity = PlayerPrefs.GetFloat("brightness");
+    }
+
+    private void UpdateFullscreen()
+    {
+        bool state = PlayerPrefs.GetInt("fullscreen") == 0 ? false : true;
+
+        Screen.fullScreen = state;
     }
 }

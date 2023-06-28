@@ -175,6 +175,9 @@ public class RoomManager : MonoBehaviour
 
         foreach(Door door in room.doorList)
         {
+            if (door.isLocked)
+                continue;
+
             List<Room> doorRooms = door.roomList;
 
             foreach(Room doorRoom in doorRooms)
@@ -192,6 +195,7 @@ public class RoomManager : MonoBehaviour
     public Task GetTaskCloseToRoom(Room room)
     {
         List<Room> rooms = GetConnectedRooms(room);
+        rooms.Add(room);
 
         foreach(Room r in rooms)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Lantern : Task, IInteractable
 {
-    new private Light light;
+    private new Light light;
     [SerializeField] protected float minIntensity = 0.6f;
     [SerializeField] protected float maxIntensity = 1f;
     [SerializeField] private float minFlickerTime = 0.1f;

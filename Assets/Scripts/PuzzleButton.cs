@@ -14,10 +14,16 @@ public class PuzzleButton : MonoBehaviour, IInteractable
     private bool isPressing = false;
     private bool isPressed = false;
     private AudioSource audioSource;
+    private SceneManager sceneManager;
+    private float defaultVolume;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
+        sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
+        sceneManager.playerPrefsUpdated += UpdateVolume;
+        defaultVolume = audioSource.volume;
     }
 
     void IInteractable.Interact(GameObject player)
@@ -74,5 +80,11 @@ public class PuzzleButton : MonoBehaviour, IInteractable
             return;
 
         StartCoroutine(pressButton(pressDepth, 0f));
+    }
+
+    private void UpdateVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("main_volume");
+        audioSource.volume = defaultVolume * volume;
     }
 }
