@@ -15,9 +15,9 @@
 
 #unity-text-field {
     justify-content: center;
-    margin-top: 20px;
-    width: 100px;
-    height: 100px;
+    margin-top: 0;
+    width: 15%;
+    height: 100%;
     font-size: 45px;
     -unity-text-align: middle-center;
     -unity-background-image-tint-color: rgb(0, 0, 0);
@@ -26,8 +26,9 @@
 #unity-text-input {
     -unity-background-image-tint-color: rgb(0, 0, 0);
     color: rgb(0, 0, 0);
+    font-size: 30%;
 }
 
 #Sliders Label {
-    font-size: 38px;
+    font-size: 20%;
 }

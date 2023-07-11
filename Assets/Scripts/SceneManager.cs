@@ -21,6 +21,7 @@ public class SceneManager : MonoBehaviour
     private bool mainMenu = false;
     private bool paused = false;
     private bool inSettings = false;
+    private UIManager uiManager;
 
     public Action<KillerStateManager> playerDeath;
     public Action resetLevel;
@@ -47,6 +48,7 @@ public class SceneManager : MonoBehaviour
         car = GameObject.Find("Car").GetComponent<Car>();
         player = GameObject.Find("Player");
         streetBuilder = GameObject.Find("StreetBuilder").GetComponent<StreetBuilder>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         if(startIntro)
         {
@@ -81,6 +83,8 @@ public class SceneManager : MonoBehaviour
 
     public void KillPlayer(KillerStateManager killer)
     {
+        uiManager.ForceCloseMenus();
+
         playerDeath?.Invoke(killer);
     }
 

@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="root" style="height: 100%; width: 100%; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5);">
-        <ui:VisualElement name="menu-container" style="flex-direction: row; justify-content: center; position: absolute; height: 220px; width: 936px; top: auto; left: auto; align-items: center; margin-left: 0;">
-            <ui:Button text="Respawn" display-tooltip-when-elided="true" name="respawn" style="width: 304px; height: 126px; font-size: 48px; -unity-font-style: normal; margin-right: 10px;" />
+        <ui:VisualElement name="menu-container" style="flex-direction: row; justify-content: center; position: absolute; height: 100%; width: 100%; top: auto; left: auto; align-items: center; margin-left: 0;">
+            <ui:Button text="Respawn" display-tooltip-when-elided="true" name="respawn" style="width: 15%; height: 10%; font-size: 20px; -unity-font-style: normal; margin-right: 10px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

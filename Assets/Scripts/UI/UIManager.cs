@@ -277,6 +277,24 @@ public class UIManager : MonoBehaviour
         respawn.clicked += Respawn;
     }
 
+    public void ForceCloseMenus()
+    {
+        if (uiDoc.visualTreeAsset == settingsMenu)
+        {
+            UnloadSettings();
+        }
+
+        if (uiDoc.visualTreeAsset == pauseMenu)
+        {
+            sceneManager.ResumeGame();
+
+        }
+        else if (uiDoc.visualTreeAsset == note)
+        {
+            sceneManager.CloseNote();
+        }
+    }
+
     private void LoadDeath()
     {
         StartCoroutine(WaitForEyes());

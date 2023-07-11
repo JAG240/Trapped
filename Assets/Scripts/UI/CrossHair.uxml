@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="root" style="align-items: center; justify-content: center; width: 100%; height: 100%;">
-        <ui:Label text="·" display-tooltip-when-elided="true" name="CrossHair" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center; justify-content: center; align-items: center; color: rgba(210, 210, 210, 0.39);" />
+    <ui:VisualElement name="root" style="align-items: center; justify-content: center; width: 100%; height: 100%; align-self: center;">
+        <ui:Label text="·" display-tooltip-when-elided="true" name="CrossHair" style="font-size: 30%; -unity-font-style: bold; -unity-text-align: middle-center; justify-content: center; align-items: center; color: rgba(210, 210, 210, 0.39); width: 100%; height: 100%; align-self: center;" />
     </ui:VisualElement>
 </ui:UXML>
